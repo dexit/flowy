@@ -1,0 +1,16 @@
+{
+  "name": "flowy",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "flowy.min.js",
+  "scripts": {
+    "demo": "http-server demo -c-1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
