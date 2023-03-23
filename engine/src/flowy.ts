@@ -85,7 +85,7 @@ constructor( canvas:HTMLCanvasElement,
         let paddingy = spacing_y;
         let offsetleft = 0;
         let rearrange = false;
-        let drag, dragx, dragy, original;
+        let drag:HTMLElement, dragx, dragy, original;
         let mouse_x, mouse_y;
         let dragblock = false;
         let prevblock = 0;
@@ -111,6 +111,10 @@ constructor( canvas:HTMLCanvasElement,
                 checkOffset();
             }
         }
+
+        /**
+         * output
+         */
         this.output = () => {
             let html_ser = canvas_div.innerHTML;
             let json_data:Output = {
@@ -127,7 +131,7 @@ constructor( canvas:HTMLCanvasElement,
                         attr: []
                     });
                     let blockParent = this.#QSP(".blockid[value='" + blocks[i].id + "']")
-                    blockParent?.querySelectorAll("input").forEach(function(block) {
+                    blockParent?.querySelectorAll("input").forEach( block => {
                         let json_name = block.getAttribute("name");
                         let json_value = block.value;
                         json_data.blocks[i].data.push({
@@ -135,7 +139,7 @@ constructor( canvas:HTMLCanvasElement,
                             value: json_value
                         });
                     });
-                    Array.prototype.slice.call(blockParent?.attributes).forEach(function(attribute) {
+                    Array.prototype.slice.call(blockParent?.attributes).forEach( attribute => {
                         let jsonobj:Record<string,any> = {}
                         jsonobj[attribute.name] = attribute.value;
                         json_data.blocks[i].attr.push(jsonobj);
@@ -144,6 +148,10 @@ constructor( canvas:HTMLCanvasElement,
                 return json_data;
             }
         }
+
+        /**
+         * deleteBlocks
+         */
         this.deleteBlocks = () => {
             blocks = [];
             canvas_div.innerHTML = "<div class='indicator invisible'></div>";
@@ -170,11 +178,11 @@ constructor( canvas:HTMLCanvasElement,
                 if (blocks.length === 0) {
                     newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + blocks.length + "'>";
                     document.body.appendChild(newNode);
-                    drag = document.querySelector(".blockid[value='" + blocks.length + "']").parentNode;
+                    drag = this.#QSP(".blockid[value='" + blocks.length + "']")!
                 } else {
                     newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, blocks.map(a => a.id)) + 1) + "'>";
                     document.body.appendChild(newNode);
-                    drag = document.querySelector(".blockid[value='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']").parentNode;
+                    drag = this.#QSP(".blockid[value='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']")!
                 }
                 blockGrabbed(event.target.closest(".create-flowy"));
                 drag.classList.add("dragging");
