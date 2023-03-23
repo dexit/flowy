@@ -23,6 +23,10 @@ moveBlock!: ( event: any ) => void
     return parent
 }
 
+get #indicator(): HTMLElement | null  {
+    return document.querySelector(".indicator") as HTMLElement
+}
+
 constructor( canvas:HTMLCanvasElement, 
                         grab: GrabHandler, 
                         release: ReleaseHandler, 
@@ -198,8 +202,8 @@ constructor( canvas:HTMLCanvasElement,
             if (event.which != 3 && (active || rearrange)) {
                 dragblock = false;
                 blockReleased();
-                if (!document.querySelector(".indicator").classList.contains("invisible")) {
-                    document.querySelector(".indicator").classList.add("invisible");
+                if (!this.#indicator.classList.contains("invisible")) {
+                    this.#indicator.classList.add("invisible");
                 }
                 if (active) {
                     original.classList.remove("dragnow");
@@ -266,7 +270,7 @@ constructor( canvas:HTMLCanvasElement,
         }
         
         function removeSelection() {
-            canvas_div.appendChild(document.querySelector(".indicator"));
+            canvas_div.appendChild(this.#indicator);
             drag.parentNode.removeChild(drag);
         }
         
@@ -556,14 +560,14 @@ constructor( canvas:HTMLCanvasElement,
                 let blocko = blocks.map(a => a.id);
                 for (let i = 0; i < blocks.length; i++) {
                     if (checkAttach(blocko[i])) {
-                        document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(document.querySelector(".indicator"));
-                        document.querySelector(".indicator").style.left = (document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetWidth / 2) - 5 + "px";
-                        document.querySelector(".indicator").style.top = document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetHeight + "px";
-                        document.querySelector(".indicator").classList.remove("invisible");
+                        document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(this.#indicator);
+                        this.#indicator.style.left = (document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetWidth / 2) - 5 + "px";
+                        this.#indicator.style.top = document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetHeight + "px";
+                        this.#indicator.classList.remove("invisible");
                         break;
                     } else if (i == blocks.length - 1) {
-                        if (!document.querySelector(".indicator").classList.contains("invisible")) {
-                            document.querySelector(".indicator").classList.add("invisible");
+                        if (!this.#indicator.classList.contains("invisible")) {
+                            this.#indicator.classList.add("invisible");
                         }
                     }
                 }
