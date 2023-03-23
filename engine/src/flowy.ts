@@ -8,6 +8,20 @@ beginDrag!: ( event: any ) => void
 endDrag!: ( event: any ) => void
 moveBlock!: ( event: any ) => void
 
+#QS<T extends Element>( selector: string ): T | null {
+    const n = document.querySelector( selector ) as T
+    if(!n) console.warn( `element not found for ${selector}`)
+    return n
+}
+
+#QSP<T extends Element>( selector: string ): T | null {
+    const n = this.#QS( selector )
+
+    const parent = n?.parentNode as T
+
+    if(!parent) console.warn( `parent not found for ${selector}`)
+    return parent
+}
 
 constructor( canvas:HTMLCanvasElement, 
                         grab: GrabHandler, 
@@ -112,8 +126,8 @@ constructor( canvas:HTMLCanvasElement,
                         data: [],
                         attr: []
                     });
-                    let blockParent = document.querySelector(".blockid[value='" + blocks[i].id + "']").parentNode;
-                    blockParent.querySelectorAll("input").forEach(function(block) {
+                    let blockParent = this.#QSP(".blockid[value='" + blocks[i].id + "']")
+                    blockParent?.querySelectorAll("input").forEach(function(block) {
                         let json_name = block.getAttribute("name");
                         let json_value = block.value;
                         json_data.blocks[i].data.push({
@@ -121,8 +135,8 @@ constructor( canvas:HTMLCanvasElement,
                             value: json_value
                         });
                     });
-                    Array.prototype.slice.call(blockParent.attributes).forEach(function(attribute) {
-                        let jsonobj = {};
+                    Array.prototype.slice.call(blockParent?.attributes).forEach(function(attribute) {
+                        let jsonobj:Record<string,any> = {}
                         jsonobj[attribute.name] = attribute.value;
                         json_data.blocks[i].attr.push(jsonobj);
                     });
