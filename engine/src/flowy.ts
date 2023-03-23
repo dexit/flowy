@@ -1,5 +1,14 @@
 class FlowyObject {
 
+load: () => void
+import!: ( output:Output ) => void 
+output!: () => Output | undefined
+deleteBlocks!: () => void
+beginDrag!: ( event: any ) => void
+endDrag!: ( event: any ) => void
+moveBlock!: ( event: any ) => void
+
+
 constructor( canvas:HTMLCanvasElement, 
                         grab: GrabHandler, 
                         release: ReleaseHandler, 
@@ -48,7 +57,7 @@ constructor( canvas:HTMLCanvasElement,
             loaded = true;
         else
             return;
-        let blocks = [];
+        let blocks = Array<Block>();
         let blockstemp = [];
         let canvas_div = canvas;
         let absx = 0;
@@ -74,13 +83,13 @@ constructor( canvas:HTMLCanvasElement,
             canvas_div.innerHTML = output.html;
             for (let a = 0; a < output.blockarr.length; a++) {
                 blocks.push({
-                    childwidth: parseFloat(output.blockarr[a].childwidth),
-                    parent: parseFloat(output.blockarr[a].parent),
-                    id: parseFloat(output.blockarr[a].id),
-                    x: parseFloat(output.blockarr[a].x),
-                    y: parseFloat(output.blockarr[a].y),
-                    width: parseFloat(output.blockarr[a].width),
-                    height: parseFloat(output.blockarr[a].height)
+                    childwidth: parseFloat(output.blockarr[a].childwidth.toString()),
+                    parent: parseFloat(output.blockarr[a].parent.toString()),
+                    id: parseFloat(output.blockarr[a].id.toString()),
+                    x: parseFloat(output.blockarr[a].x.toString()),
+                    y: parseFloat(output.blockarr[a].y.toString()),
+                    width: parseFloat(output.blockarr[a].width.toString()),
+                    height: parseFloat(output.blockarr[a].height.toString())
                 })
             }
             if (blocks.length > 1) {
@@ -90,7 +99,7 @@ constructor( canvas:HTMLCanvasElement,
         }
         this.output = () => {
             let html_ser = canvas_div.innerHTML;
-            let json_data = {
+            let json_data:Output = {
                 html: html_ser,
                 blockarr: blocks,
                 blocks: []

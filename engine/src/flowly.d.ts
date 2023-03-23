@@ -25,5 +25,6 @@ interface BlockData {
 interface Output {
     html: string
     blockarr: Array<Block>
+    blocks: Array<any>
 }
 
