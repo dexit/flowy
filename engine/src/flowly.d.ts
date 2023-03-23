@@ -27,7 +27,3 @@ interface Output {
     blockarr: Array<Block>
 }
 
-interface FlowyObject {
-
-    load: () => void 
-}

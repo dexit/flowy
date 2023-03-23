@@ -1,4 +1,6 @@
-const flowy = function( canvas:HTMLCanvasElement, 
+class FlowyObject {
+
+constructor( canvas:HTMLCanvasElement, 
                         grab: GrabHandler, 
                         release: ReleaseHandler, 
                         snapping: SnappingHandler, 
@@ -28,19 +30,20 @@ const flowy = function( canvas:HTMLCanvasElement,
     //     Element.prototype.matches = Element.prototype.msMatchesSelector ||
     //         Element.prototype.webkitMatchesSelector;
     // }
-    if (!Element.prototype.closest) {
-        Element.prototype.closest = function(s) {
-            let el = this;
-            do {
-                if (Element.prototype.matches.call(el, s)) return el;
-                el = el.parentElement || el.parentNode;
-            } while (el !== null && el.nodeType === 1);
-            return null;
-        };
-    }    
+
+    // if (!Element.prototype.closest) {
+    //     Element.prototype.closest = function(s) {
+    //         let el = this;
+    //         do {
+    //             if (Element.prototype.matches.call(el, s)) return el;
+    //             el = el.parentElement || el.parentNode;
+    //         } while (el !== null && el.nodeType === 1);
+    //         return null;
+    //     };
+    // }    
     
     let loaded = false;
-    flowy.load = function() {
+    this.load = () => {
         if (!loaded)
             loaded = true;
         else
@@ -67,7 +70,7 @@ const flowy = function( canvas:HTMLCanvasElement,
         el.classList.add('indicator');
         el.classList.add('invisible');
         canvas_div.appendChild(el);
-        flowy.import = function(output) {
+        this.import = output => {
             canvas_div.innerHTML = output.html;
             for (let a = 0; a < output.blockarr.length; a++) {
                 blocks.push({
@@ -85,7 +88,7 @@ const flowy = function( canvas:HTMLCanvasElement,
                 checkOffset();
             }
         }
-        flowy.output = function() {
+        this.output = () => {
             let html_ser = canvas_div.innerHTML;
             let json_data = {
                 html: html_ser,
@@ -118,12 +121,12 @@ const flowy = function( canvas:HTMLCanvasElement,
                 return json_data;
             }
         }
-        flowy.deleteBlocks = function() {
+        this.deleteBlocks = () => {
             blocks = [];
             canvas_div.innerHTML = "<div class='indicator invisible'></div>";
         }
 
-        flowy.beginDrag = function(event) {
+        this.beginDrag = event => {
             if (window.getComputedStyle(canvas_div).position == "absolute" || window.getComputedStyle(canvas_div).position == "fixed") {
                 absx = canvas_div.getBoundingClientRect().left;
                 absy = canvas_div.getBoundingClientRect().top;
@@ -160,7 +163,7 @@ const flowy = function( canvas:HTMLCanvasElement,
             }
         }
 
-        flowy.endDrag = function(event) {
+        this.endDrag = event => {
             if (event.which != 3 && (active || rearrange)) {
                 dragblock = false;
                 blockReleased();
@@ -434,7 +437,7 @@ const flowy = function( canvas:HTMLCanvasElement,
             return element.parentNode && hasParentClass(element.parentNode, classname);
         }
 
-        flowy.moveBlock = function(event) {
+        this.moveBlock = (event) => {
             if (event.targetTouches) {
                 mouse_x = event.targetTouches[0].clientX;
                 mouse_y = event.targetTouches[0].clientY;
@@ -618,18 +621,18 @@ const flowy = function( canvas:HTMLCanvasElement,
             }
         }
         
-        document.addEventListener("mousedown", flowy.beginDrag);
+        document.addEventListener("mousedown", this.beginDrag);
         document.addEventListener("mousedown", touchblock, false);
-        document.addEventListener("touchstart", flowy.beginDrag);
+        document.addEventListener("touchstart", this.beginDrag);
         document.addEventListener("touchstart", touchblock, false);
         
 
         document.addEventListener("mouseup", touchblock, false);
-        document.addEventListener("mousemove", flowy.moveBlock, false);
-        document.addEventListener("touchmove", flowy.moveBlock, false);
+        document.addEventListener("mousemove", this.moveBlock, false);
+        document.addEventListener("touchmove", this.moveBlock, false);
 
-        document.addEventListener("mouseup", flowy.endDrag, false);
-        document.addEventListener("touchend", flowy.endDrag, false);
+        document.addEventListener("mouseup", this.endDrag, false);
+        document.addEventListener("touchend", this.endDrag, false);
     }
 
     function blockGrabbed(block) {
@@ -662,5 +665,18 @@ const flowy = function( canvas:HTMLCanvasElement,
         }
     }
     
-    flowy.load();
+    this.load();
+}
+}
+
+
+var flowy = function(
+    canvas:HTMLCanvasElement, 
+    grab: GrabHandler, 
+    release: ReleaseHandler, 
+    snapping: SnappingHandler, 
+    rearrange: RearrangegHandler, 
+    spacing_x:number, 
+    spacing_y:number) {
+    return new FlowyObject( canvas, grab, release, snapping, rearrange, spacing_x, spacing_x )
 }
