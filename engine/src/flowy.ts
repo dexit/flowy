@@ -1,3 +1,11 @@
+
+function toInt( value: number | string )  {
+    if( typeof(value) === 'number' ) 
+        return parseInt( `${value}`)
+    else 
+        return parseInt( value )
+}
+
 class FlowyObject {
 
 load: () => void
@@ -286,7 +294,7 @@ constructor( canvas:HTMLCanvasElement,
             }
         }
         
-        function checkAttach(id) {
+        function checkAttach(id:number) {
             const xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
             const ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
             if (xpos >= blocks.filter(a => a.id == id)[0].x - (blocks.filter(a => a.id == id)[0].width / 2) - paddingx && xpos <= blocks.filter(a => a.id == id)[0].x + (blocks.filter(a => a.id == id)[0].width / 2) + paddingx && ypos >= blocks.filter(a => a.id == id)[0].y - (blocks.filter(a => a.id == id)[0].height / 2) && ypos <= blocks.filter(a => a.id == id)[0].y + blocks.filter(a => a.id == id)[0].height) {
@@ -330,8 +338,8 @@ constructor( canvas:HTMLCanvasElement,
                         arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - 1 - absy + "px";
                         canvas_div.appendChild(blockParent);
                         canvas_div.appendChild(arrowParent);
-                        blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(blockParent.offsetWidth) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left - 1;
-                        blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(blockParent.offsetHeight) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top - 1;
+                        blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (toInt(blockParent.offsetWidth) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left - 1;
+                        blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (toInt(blockParent.offsetHeight) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top - 1;
                     }
                 }
                 blockstemp.filter(a => a.id == 0)[0].x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
@@ -525,7 +533,7 @@ constructor( canvas:HTMLCanvasElement,
                 let allids = [];
                 while (!flag) {
                     for (let i = 0; i < layer.length; i++) {
-                        if (layer[i] != blockid) {
+                        if (layer[i].id != blockid) {
                             blockstemp.push(blocks.filter(a => a.id == layer[i].id)[0]);
                             const blockParent = this.#queryBlockidByValue(layer[i].id)
                             const arrowParent = this.#queryArrowidByValue(layer[i].id)
@@ -547,16 +555,12 @@ constructor( canvas:HTMLCanvasElement,
                     }
                 }
                 for (let i = 0; i < blocks.filter(a => a.parent == blockid).length; i++) {
-                    let blocknumber = blocks.filter(a => a.parent == blockid)[i];
-                    blocks = blocks.filter(function(e) {
-                        return e.id != blocknumber
-                    });
+                    let blocknumber = blocks.filter(a => a.parent == blockid)[i].id;
+                    blocks = blocks.filter( e =>  e.id != blocknumber )
                 }
                 for (let i = 0; i < allids.length; i++) {
                     let blocknumber = allids[i];
-                    blocks = blocks.filter(function(e) {
-                        return e.id != blocknumber
-                    });
+                    blocks = blocks.filter( e => e.id != blocknumber )
                 }
                 if (blocks.length > 1) {
                     rearrangeMe();
