@@ -1,7 +1,7 @@
-type GrabHandler        = ( block:any ) => void 
+type GrabHandler        = ( block:Block ) => void 
 type ReleaseHandler     = () => void 
-type SnappingHandler    = (drag:any, first:any, parent:any ) => boolean
-type RearrangegHandler   = (drag:any, parent:any) => boolean
+type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
+type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
 type Point              = { x:number, y:number }
 
 interface Block {

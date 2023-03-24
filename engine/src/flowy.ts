@@ -693,7 +693,6 @@ constructor( canvas:HTMLCanvasElement,
         document.addEventListener("touchstart", this.beginDrag);
         document.addEventListener("touchstart", touchblock, false);
         
-
         document.addEventListener("mouseup", touchblock, false);
         document.addEventListener("mousemove", this.moveBlock, false);
         document.addEventListener("touchmove", this.moveBlock, false);
@@ -702,7 +701,7 @@ constructor( canvas:HTMLCanvasElement,
         document.addEventListener("touchend", this.endDrag, false);
     }
 
-    function blockGrabbed(block) {
+    function blockGrabbed(block:Block) {
         grab(block);
     }
 
@@ -710,22 +709,22 @@ constructor( canvas:HTMLCanvasElement,
         release();
     }
 
-    function blockSnap(drag, first, parent) {
+    function blockSnap(drag:HTMLElement, first:boolean, parent?:HTMLElement) {
         return snapping(drag, first, parent);
     }
 
-    function beforeDelete(drag, parent) {
+    function beforeDelete(drag:HTMLElement, parent:Block) {
         return rearrange(drag, parent);
     }
 
-    function addEventListenerMulti(type, listener, capture, selector) {
+    function addEventListenerMulti(type:string, listener:any, capture:boolean, selector:string) {
         let nodes = document.querySelectorAll(selector);
         for (let i = 0; i < nodes.length; i++) {
             nodes[i].addEventListener(type, listener, capture);
         }
     }
 
-    function removeEventListenerMulti(type, listener, capture, selector) {
+    function removeEventListenerMulti(type:string, listener:any, capture:boolean, selector:string) {
         let nodes = document.querySelectorAll(selector);
         for (let i = 0; i < nodes.length; i++) {
             nodes[i].removeEventListener(type, listener, capture);
