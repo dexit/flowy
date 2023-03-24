@@ -106,7 +106,7 @@ constructor( canvas:HTMLCanvasElement,
         let active = false;
         let paddingx = spacing_x;
         let paddingy = spacing_y;
-        let offsetleft = 0;
+        let offsetleft = 0
         let rearrange = false;
         let drag:HTMLElement
         let dragx:number
@@ -607,11 +607,11 @@ constructor( canvas:HTMLCanvasElement,
         }
 
         const checkOffset = () => {
-            offsetleft = blocks.map(a => a.x);
+            const offsetleftArr = blocks.map(a => a.x);
             let widths = blocks.map(a => a.width);
-            let mathmin = offsetleft.map(function(item, index) {
-                return item - (widths[index] / 2);
-            })
+            let mathmin = offsetleftArr.map( (item, index) =>
+                item - (widths[index] / 2)
+            )
             offsetleft = Math.min.apply(Math, mathmin);
             if (offsetleft < (canvas_div.getBoundingClientRect().left + window.scrollX - absx)) {
                 let blocko = blocks.map(a => a.id);
@@ -667,9 +667,9 @@ constructor( canvas:HTMLCanvasElement,
                 for (let w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
                     let children = blocks.filter(id => id.parent == result[z])[w];
                     const r_block = this.#queryBlockidByValue(children.id)
-                    const r_array = blocks.filter(id => id.id == result[z]);
-                    r_block.style.top = r_array.y + paddingy + canvas_div.getBoundingClientRect().top - absy + "px";
-                    r_array.y = r_array.y + paddingy;
+                    const r_array = blocks.filter(id => id.id == result[z]);                
+                    // r_block.style.top = r_array.y + paddingy + canvas_div.getBoundingClientRect().top - absy + "px";
+                    // r_array.y = r_array.y + paddingy;
                     if (children.childwidth > children.width) {
                         r_block.style.left = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
                         children.x = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
