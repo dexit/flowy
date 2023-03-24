@@ -10,6 +10,14 @@ moveBlock!: ( event: any ) => void
 
 _blockidValue!: () => { value: string, toInt: () => number }
 
+#queryBlockidByValue( value: number | string  ) {
+    return document.querySelector(`.blockid[value='${value}']`)?.parentNode as HTMLElement
+}
+
+#queryArrowidByValue( value: number | string  ) {
+    return document.querySelector(`.arrowid[value='${value}']`)?.parentNode as HTMLElement
+}
+
 
 #QS<T extends Element>( selector: string ): T | null {
     const n = document.querySelector( selector ) as T
@@ -235,7 +243,7 @@ constructor( canvas:HTMLCanvasElement,
                     for (let i = 0; i < blocks.length; i++) {
                         if (checkAttach(blocko[i])) {
                             active = false;
-                            if (blockSnap(drag, false, document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode)) {
+                            if (blockSnap(drag, false, this.#queryBlockidByValue(blocko[i]))) {
                                 snap(drag, i, blocko);
                             } else {
                                 active = false;
@@ -310,7 +318,7 @@ constructor( canvas:HTMLCanvasElement,
                 rearrange = false;
                 for (let w = 0; w < blockstemp.length; w++) {
                     if (blockstemp[w].id != this._blockidValue().toInt()) {
-                        const blockParent = document.querySelector(".blockid[value='" + blockstemp[w].id + "']").parentNode;
+                        const blockParent = this.#queryBlockidByValue(blockstemp[w].id)
                         const arrowParent = document.querySelector(".arrowid[value='" + blockstemp[w].id + "']").parentNode;
                         blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (window.scrollX) + canvas_div.scrollLeft - 1 - absx + "px";
                         blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (window.scrollY) + canvas_div.scrollTop - absy - 1 + "px";
@@ -369,11 +377,11 @@ constructor( canvas:HTMLCanvasElement,
             for (let w = 0; w < blocks.filter(id => id.parent == blocko[i]).length; w++) {
                 let children = blocks.filter(id => id.parent == blocko[i])[w];
                 if (children.childwidth > children.width) {
-                    document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) + "px";
+                    this.#queryBlockidByValue(children.id).style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) + "px";
                     children.x = blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
                     totalremove += children.childwidth + paddingx;
                 } else {
-                    document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + "px";
+                    this.#queryBlockidByValue(children.id).style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + "px";
                     children.x = blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
                     totalremove += children.width + paddingx;
                 }
@@ -386,7 +394,7 @@ constructor( canvas:HTMLCanvasElement,
                 blockstemp.filter(a => a.id == drag.querySelector(".blockid").value)[0].parent = blocko[i];
                 for (let w = 0; w < blockstemp.length; w++) {
                     if (blockstemp[w].id != this._blockidValue().toInt()) {
-                        const blockParent = document.querySelector(".blockid[value='" + blockstemp[w].id + "']").parentNode;
+                        const blockParent = this.#queryBlockidByValue(blockstemp[w].id)
                         const arrowParent = document.querySelector(".arrowid[value='" + blockstemp[w].id + "']").parentNode;
                         blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (window.scrollX + canvas_div.getBoundingClientRect().left) + canvas_div.scrollLeft + "px";
                         blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (window.scrollY + canvas_div.getBoundingClientRect().top) + canvas_div.scrollTop + "px";
@@ -515,7 +523,7 @@ constructor( canvas:HTMLCanvasElement,
                     for (let i = 0; i < layer.length; i++) {
                         if (layer[i] != blockid) {
                             blockstemp.push(blocks.filter(a => a.id == layer[i].id)[0]);
-                            const blockParent = document.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
+                            const blockParent = this.#queryBlockidByValue(layer[i].id)
                             const arrowParent = document.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
                             blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX) + "px";
                             blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY) + "px";
@@ -575,9 +583,9 @@ constructor( canvas:HTMLCanvasElement,
                 let blocko = blocks.map(a => a.id);
                 for (let i = 0; i < blocks.length; i++) {
                     if (checkAttach(blocko[i])) {
-                        document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(this.#indicator);
-                        this.#indicator.style.left = (document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetWidth / 2) - 5 + "px";
-                        this.#indicator.style.top = document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.offsetHeight + "px";
+                        this.#queryBlockidByValue(blocko[i]).appendChild(this.#indicator);
+                        this.#indicator.style.left = (this.#queryBlockidByValue(blocko[i]).offsetWidth / 2) - 5 + "px";
+                        this.#indicator.style.top = this.#queryBlockidByValue(blocko[i]).offsetHeight + "px";
                         this.#indicator.classList.remove("invisible");
                         break;
                     } else if (i == blocks.length - 1) {
@@ -589,7 +597,7 @@ constructor( canvas:HTMLCanvasElement,
             }
         }
 
-        function checkOffset() {
+        const checkOffset = () => {
             offsetleft = blocks.map(a => a.x);
             let widths = blocks.map(a => a.width);
             let mathmin = offsetleft.map(function(item, index) {
@@ -599,7 +607,7 @@ constructor( canvas:HTMLCanvasElement,
             if (offsetleft < (canvas_div.getBoundingClientRect().left + window.scrollX - absx)) {
                 let blocko = blocks.map(a => a.id);
                 for (let w = 0; w < blocks.length; w++) {
-                    document.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleft + canvas_div.getBoundingClientRect().left - absx + 20 + "px";
+                    this.#queryBlockidByValue(blocks.filter(a => a.id == blocko[w])[0].id).style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleft + canvas_div.getBoundingClientRect().left - absx + 20 + "px";
                     if (blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
                         let arrowblock = blocks.filter(a => a.id == blocko[w])[0];
                         let arrowx = arrowblock.x - blocks.filter(a => a.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
@@ -611,12 +619,12 @@ constructor( canvas:HTMLCanvasElement,
                     }
                 }
                 for (let w = 0; w < blocks.length; w++) {
-                    blocks[w].x = (document.querySelector(".blockid[value='" + blocks[w].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (canvas_div.scrollLeft) + (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + blocks[w].id + "']").parentNode).width) / 2) - 20 - canvas_div.getBoundingClientRect().left;
+                    blocks[w].x = (this.#queryBlockidByValue(blocks[w].id).getBoundingClientRect().left + window.scrollX) + (canvas_div.scrollLeft) + (parseInt(window.getComputedStyle(this.#queryBlockidByValue(blocks[w].id)).width) / 2) - 20 - canvas_div.getBoundingClientRect().left;
                 }
             }
         }
 
-        function rearrangeMe() {
+        const rearrangeMe = () => {
             let result = blocks.map(a => a.parent);
             for (let z = 0; z < result.length; z++) {
                 if (result[z] == -1) {
@@ -649,7 +657,7 @@ constructor( canvas:HTMLCanvasElement,
                 }
                 for (let w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
                     let children = blocks.filter(id => id.parent == result[z])[w];
-                    const r_block = document.querySelector(".blockid[value='" + children.id + "']").parentNode;
+                    const r_block = this.#queryBlockidByValue(children.id)
                     const r_array = blocks.filter(id => id.id == result[z]);
                     r_block.style.top = r_array.y + paddingy + canvas_div.getBoundingClientRect().top - absy + "px";
                     r_array.y = r_array.y + paddingy;
