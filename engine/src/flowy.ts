@@ -573,8 +573,9 @@ constructor( canvas:HTMLCanvasElement,
             } else if (rearrange) {
                 drag.style.left = mouse_x - dragx - (window.scrollX + absx) + canvas_div.scrollLeft + "px";
                 drag.style.top = mouse_y - dragy - (window.scrollY + absy) + canvas_div.scrollTop + "px";
-                blockstemp.filter(a => a.id == this.#blockidValue().toInt()).x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
-                blockstemp.filter(a => a.id == this.#blockidValue().toInt()).y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
+                const b = blockstemp.find(a => a.id == this.#blockidValue().toInt())!
+                b.x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
+                b.y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
             }
             if (active || rearrange) {
                 if (mouse_x > canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left - 10 && mouse_x < canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left + 10) {
@@ -736,7 +737,7 @@ constructor( canvas:HTMLCanvasElement,
 }
 
 
-var flowy = function(
+var newflowy = function(
     canvas:HTMLCanvasElement, 
     grab: GrabHandler, 
     release: ReleaseHandler, 
