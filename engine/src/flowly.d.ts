@@ -28,3 +28,4 @@ interface Output {
     blocks: Array<any>
 }
 
+type ActionType = 'drop' | 'rearrange'
