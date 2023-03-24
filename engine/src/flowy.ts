@@ -208,9 +208,12 @@ constructor( canvas:HTMLCanvasElement,
                     document.body.appendChild(newNode);
                     drag = this.#QSP(".blockid[value='" + blocks.length + "']")!
                 } else {
-                    newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, blocks.map(a => a.id)) + 1) + "'>";
+
+                    const max = blocks.reduce( (result, a ) => Math.max( result, a.id), 0 )
+
+                    newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (max + 1) + "'>";
                     document.body.appendChild(newNode);
-                    drag = this.#QSP(".blockid[value='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']")!
+                    drag = this.#queryBlockidByValue(parseInt(`${max}`) + 1)
                 }
                 blockGrabbed(event.target.closest(".create-flowy"));
                 drag.classList.add("dragging");
