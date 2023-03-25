@@ -11,6 +11,12 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _FlowyObject_instances, _FlowyObject_blockidValue, _FlowyObject_queryBlockidByValue, _FlowyObject_queryArrowidByValue, _FlowyObject_QS, _FlowyObject_QSP, _FlowyObject_indicator_get;
+function toInt(value) {
+    if (typeof (value) === 'number')
+        return parseInt(`${value}`);
+    else
+        return parseInt(value);
+}
 class FlowyObject {
     constructor(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y) {
         _FlowyObject_instances.add(this);
@@ -171,9 +177,10 @@ class FlowyObject {
                         drag = __classPrivateFieldGet(this, _FlowyObject_instances, "m", _FlowyObject_QSP).call(this, ".blockid[value='" + blocks.length + "']");
                     }
                     else {
-                        newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, blocks.map(a => a.id)) + 1) + "'>";
+                        const max = blocks.reduce((result, a) => Math.max(result, a.id), 0);
+                        newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (max + 1) + "'>";
                         document.body.appendChild(newNode);
-                        drag = __classPrivateFieldGet(this, _FlowyObject_instances, "m", _FlowyObject_QSP).call(this, ".blockid[value='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']");
+                        drag = __classPrivateFieldGet(this, _FlowyObject_instances, "m", _FlowyObject_queryBlockidByValue).call(this, parseInt(`${max}`) + 1);
                     }
                     blockGrabbed(event.target.closest(".create-flowy"));
                     drag.classList.add("dragging");
@@ -297,8 +304,8 @@ class FlowyObject {
                             arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - 1 - absy + "px";
                             canvas_div.appendChild(blockParent);
                             canvas_div.appendChild(arrowParent);
-                            blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(blockParent.offsetWidth) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left - 1;
-                            blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(blockParent.offsetHeight) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top - 1;
+                            blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (toInt(blockParent.offsetWidth) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left - 1;
+                            blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (toInt(blockParent.offsetHeight) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top - 1;
                         }
                     }
                     blockstemp.filter(a => a.id == 0)[0].x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
@@ -495,7 +502,7 @@ class FlowyObject {
                     let allids = [];
                     while (!flag) {
                         for (let i = 0; i < layer.length; i++) {
-                            if (layer[i] != blockid) {
+                            if (layer[i].id != blockid) {
                                 blockstemp.push(blocks.filter(a => a.id == layer[i].id)[0]);
                                 const blockParent = __classPrivateFieldGet(this, _FlowyObject_instances, "m", _FlowyObject_queryBlockidByValue).call(this, layer[i].id);
                                 const arrowParent = __classPrivateFieldGet(this, _FlowyObject_instances, "m", _FlowyObject_queryArrowidByValue).call(this, layer[i].id);
@@ -518,16 +525,12 @@ class FlowyObject {
                         }
                     }
                     for (let i = 0; i < blocks.filter(a => a.parent == blockid).length; i++) {
-                        let blocknumber = blocks.filter(a => a.parent == blockid)[i];
-                        blocks = blocks.filter(function (e) {
-                            return e.id != blocknumber;
-                        });
+                        let blocknumber = blocks.filter(a => a.parent == blockid)[i].id;
+                        blocks = blocks.filter(e => e.id != blocknumber);
                     }
                     for (let i = 0; i < allids.length; i++) {
                         let blocknumber = allids[i];
-                        blocks = blocks.filter(function (e) {
-                            return e.id != blocknumber;
-                        });
+                        blocks = blocks.filter(e => e.id != blocknumber);
                     }
                     if (blocks.length > 1) {
                         rearrangeMe();
@@ -541,8 +544,9 @@ class FlowyObject {
                 else if (rearrange) {
                     drag.style.left = mouse_x - dragx - (window.scrollX + absx) + canvas_div.scrollLeft + "px";
                     drag.style.top = mouse_y - dragy - (window.scrollY + absy) + canvas_div.scrollTop + "px";
-                    blockstemp.filter(a => a.id == __classPrivateFieldGet(this, _FlowyObject_blockidValue, "f").call(this).toInt()).x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
-                    blockstemp.filter(a => a.id == __classPrivateFieldGet(this, _FlowyObject_blockidValue, "f").call(this).toInt()).y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
+                    const b = blockstemp.find(a => a.id == __classPrivateFieldGet(this, _FlowyObject_blockidValue, "f").call(this).toInt());
+                    b.x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
+                    b.y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
                 }
                 if (active || rearrange) {
                     if (mouse_x > canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left - 10 && mouse_x < canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left + 10) {
@@ -577,11 +581,9 @@ class FlowyObject {
                 }
             };
             const checkOffset = () => {
-                offsetleft = blocks.map(a => a.x);
+                const offsetleftArr = blocks.map(a => a.x);
                 let widths = blocks.map(a => a.width);
-                let mathmin = offsetleft.map(function (item, index) {
-                    return item - (widths[index] / 2);
-                });
+                let mathmin = offsetleftArr.map((item, index) => item - (widths[index] / 2));
                 offsetleft = Math.min.apply(Math, mathmin);
                 if (offsetleft < (canvas_div.getBoundingClientRect().left + window.scrollX - absx)) {
                     let blocko = blocks.map(a => a.id);
@@ -641,8 +643,8 @@ class FlowyObject {
                         let children = blocks.filter(id => id.parent == result[z])[w];
                         const r_block = __classPrivateFieldGet(this, _FlowyObject_instances, "m", _FlowyObject_queryBlockidByValue).call(this, children.id);
                         const r_array = blocks.filter(id => id.id == result[z]);
-                        r_block.style.top = r_array.y + paddingy + canvas_div.getBoundingClientRect().top - absy + "px";
-                        r_array.y = r_array.y + paddingy;
+                        // r_block.style.top = r_array.y + paddingy + canvas_div.getBoundingClientRect().top - absy + "px";
+                        // r_array.y = r_array.y + paddingy;
                         if (children.childwidth > children.width) {
                             r_block.style.left = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
                             children.x = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
@@ -717,6 +719,6 @@ _FlowyObject_blockidValue = new WeakMap(), _FlowyObject_instances = new WeakSet(
 }, _FlowyObject_indicator_get = function _FlowyObject_indicator_get() {
     return document.querySelector(".indicator");
 };
-var flowy = function (canvas, grab, release, snapping, rearrange, spacing_x, spacing_y) {
+var newflowy = function (canvas, grab, release, snapping, rearrange, spacing_x, spacing_y) {
     return new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y);
 };

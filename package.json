@@ -5,12 +5,16 @@
   "private": true,
   "main": "flowy.min.js",
   "scripts": {
-    "demo": "http-server demo -c-1"
+    "demo": "http-server packages/demo -c-1"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^14.1.1"
-  }
+    "http-server": "^14.1.1",
+    "lerna": "^6.6.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
