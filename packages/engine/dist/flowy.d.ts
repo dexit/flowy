@@ -16,7 +16,7 @@ interface Output {
     blockarr: Array<Block>;
     blocks: Array<any>;
 }
-export declare class FlowyObject {
+export class FlowyObject {
     #private;
     load: () => void;
     import: (output: Output) => void;
@@ -27,5 +27,4 @@ export declare class FlowyObject {
     moveBlock: (event: any) => void;
     constructor(canvas: HTMLCanvasElement, grab: GrabHandler, release: ReleaseHandler, snapping: SnappingHandler, rearrange: RearrangegHandler, spacing_x: number, spacing_y: number);
 }
-export declare const newflowy: (canvas: HTMLCanvasElement, grab: GrabHandler, release: ReleaseHandler, snapping: SnappingHandler, rearrange: RearrangegHandler, spacing_x: number, spacing_y: number) => FlowyObject;
-export {};
+export const newflowy: (canvas: HTMLCanvasElement, grab: GrabHandler, release: ReleaseHandler, snapping: SnappingHandler, rearrange: RearrangegHandler, spacing_x: number, spacing_y: number) => FlowyObject;

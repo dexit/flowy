@@ -2,16 +2,19 @@
   "name": "flowy-engine",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/flowy.js",
+  "source": "src/flowy.ts",
+  "module": "dist/flowy.js",
   "types": "dist/flowy.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "parcel build src/flowy.ts --no-source-maps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@parcel/packager-ts": "^2.8.3",
+    "@parcel/transformer-typescript-types": "^2.8.3",
     "typescript": "^5.0.2"
   }
 }

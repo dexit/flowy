@@ -1,0 +1,50 @@
+.dragging {
+  z-index: 111 !important;
+}
+
+.block {
+  z-index: 9;
+  position: absolute;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  z-index: 2;
+  background-color: #217ce8;
+  border-radius: 60px;
+  margin-top: -5px;
+  transition: all .3s cubic-bezier(.05, .03, .35, 1);
+  position: absolute;
+  transform: scale(1);
+}
+
+.invisible {
+  transform: scale(0);
+  opacity: 0 !important;
+}
+
+.indicator:after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  opacity: .2;
+  background-color: #217ce8;
+  border-radius: 60px;
+  display: block;
+  transform: scale(1.7);
+}
+
+.arrowblock {
+  width: 100%;
+  pointer-events: none;
+  position: absolute;
+  overflow: visible;
+}
+
+.arrowblock svg {
+  width: -webkit-fill-available;
+  overflow: visible;
+}
+

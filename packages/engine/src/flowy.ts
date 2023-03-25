@@ -1,3 +1,4 @@
+import './flowy.css'
 
 type GrabHandler        = ( block:Block ) => void 
 type ReleaseHandler     = () => void 
