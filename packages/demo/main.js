@@ -4,7 +4,77 @@ document.addEventListener("DOMContentLoaded", function(){
     var rightcard = false;
     var tempblock;
     var tempblock2;
-    document.getElementById("blocklist").innerHTML = '<div class="blockelem create-flowy noselect"><input type="hidden" name="blockelemtype" class="blockelemtype" value="1"><div class="grabme"><img src="assets/grabme.svg"></div><div class="blockin">                  <div class="blockico"><span></span><img src="assets/eye.svg"></div><div class="blocktext">                        <p class="blocktitle">New visitor</p><p class="blockdesc">Triggers when somebody visits a specified page</p>        </div></div></div><div class="blockelem create-flowy noselect"><input type="hidden" name="blockelemtype" class="blockelemtype" value="2"><div class="grabme"><img src="assets/grabme.svg"></div><div class="blockin">                    <div class="blockico"><span></span><img src="assets/action.svg"></div><div class="blocktext">                        <p class="blocktitle">Action is performed</p><p class="blockdesc">Triggers when somebody performs a specified action</p></div></div></div><div class="blockelem create-flowy noselect"><input type="hidden" name="blockelemtype" class="blockelemtype" value="3"><div class="grabme"><img src="assets/grabme.svg"></div><div class="blockin">                    <div class="blockico"><span></span><img src="assets/time.svg"></div><div class="blocktext">                        <p class="blocktitle">Time has passed</p><p class="blockdesc">Triggers after a specified amount of time</p>          </div></div></div><div class="blockelem create-flowy noselect"><input type="hidden" name="blockelemtype" class="blockelemtype" value="4"><div class="grabme"><img src="assets/grabme.svg"></div><div class="blockin">                    <div class="blockico"><span></span><img src="assets/error.svg"></div><div class="blocktext">                        <p class="blocktitle">Error prompt</p><p class="blockdesc">Triggers when a specified error happens</p>              </div></div></div>';
+    
+    document.getElementById("blocklist").innerHTML = `
+
+        <div class="blockelem create-flowy noselect">
+            <input type="hidden" name="blockelemtype" class="blockelemtype" value="1">
+            <div class="grabme">
+                <img src="assets/grabme.svg">
+            </div>
+            <div class="blockin">
+                <div class="blockico">
+                    <span></span>
+                    <img src="assets/eye.svg">
+                </div>
+                <div class="blocktext">
+                    <p class="blocktitle">New visitor</p>
+                    <p class="blockdesc">Triggers when somebody visits a specified page</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="blockelem create-flowy noselect">
+            <input type="hidden" name="blockelemtype" class="blockelemtype" value="2">
+            <div class="grabme">
+                <img src="assets/grabme.svg">
+            </div>
+            <div class="blockin">
+                <div class="blockico">
+                    <span></span>
+                    <img src="assets/action.svg">
+                </div>
+                <div class="blocktext">                        
+                    <p class="blocktitle">Action is performed</p>
+                    <p class="blockdesc">Triggers when somebody performs a specified action</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="blockelem create-flowy noselect">
+            <input type="hidden" name="blockelemtype" class="blockelemtype" value="3">
+            <div class="grabme">
+                <img src="assets/grabme.svg"></div>
+                <div class="blockin">                    
+                    <div class="blockico">
+                        <span></span>
+                        <img src="assets/time.svg">
+                    </div>
+                <div class="blocktext">                        
+                    <p class="blocktitle">Time has passed</p>
+                    <p class="blockdesc">Triggers after a specified amount of time</p>          
+                </div>
+            </div>
+        </div>
+        
+        <div class="blockelem create-flowy noselect">
+            <input type="hidden" name="blockelemtype" class="blockelemtype" value="4">
+            <div class="grabme">
+                <img src="assets/grabme.svg">
+            </div>
+            <div class="blockin">                    
+                <div class="blockico">
+                    <span></span>
+                    <img src="assets/error.svg">
+                </div>
+                <div class="blocktext">                        
+                    <p class="blocktitle">Error prompt</p>
+                    <p class="blockdesc">Triggers when a specified error happens</p>              
+                </div>
+            </div>
+        </div>
+        `;
+
     let flowy = newflowy(document.getElementById("canvas"), drag, release, snapping);
     function addEventListenerMulti(type, listener, capture, selector) {
         var nodes = document.querySelectorAll(selector);
@@ -12,33 +82,69 @@ document.addEventListener("DOMContentLoaded", function(){
             nodes[i].addEventListener(type, listener, capture);
         }
     }
+
+    function addElement(drag, image_url, title, body ) {
+        
+        const img1 = document.createElement('img');
+        img1.src = image_url;
+
+        const p = document.createElement('P');
+        p.className = 'blockyname'
+        p.innerText = title
+
+        const div1 = document.createElement('div');
+        div1.className = 'blockyleft';
+        div1.appendChild(img1)
+        div1.appendChild(p)
+
+        const img2 = document.createElement('img');
+        img2.src = new URL('assets/more.svg', import.meta.url);
+
+        const div2 = document.createElement('div');
+        div2.className = 'blockyright';
+        div2.appendChild(img2)
+
+        const div3 = document.createElement('div');
+        div3.className = 'blockydiv';
+
+        const div4 = document.createElement('div');
+        div4.className = 'blockyinfo';
+        div4.innerHTML = body
+
+        drag.appendChild(div1)
+        drag.appendChild(div2)
+        drag.appendChild(div3)
+        drag.appendChild(div4)
+
+    }
+
     function snapping(drag, first) {
         var grab = drag.querySelector(".grabme");
         grab.parentNode.removeChild(grab);
         var blockin = drag.querySelector(".blockin");
         blockin.parentNode.removeChild(blockin);
-        if (drag.querySelector(".blockelemtype").value == "1") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/eyeblue.svg'><p class='blockyname'>New visitor</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When a <span>new visitor</span> goes to <span>Site 1</span></div>";
+        if (drag.querySelector(".blockelemtype").value == "1") { 
+            addElement(drag, new URL('assets/eyeblue.svg', import.meta.url), 'New visitor', 'When a <span>new visitor</span> goes to <span>Site 1</span>')
         } else if (drag.querySelector(".blockelemtype").value == "2") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/actionblue.svg'><p class='blockyname'>Action is performed</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Action 1</span> is performed</div>";
+            addElement(drag, new URL('assets/actionblue.svg', import.meta.url), 'Action is performed', 'When <span>Action 1</span> is performed')
         } else if (drag.querySelector(".blockelemtype").value == "3") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/timeblue.svg'><p class='blockyname'>Time has passed</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>10 seconds</span> have passed</div>";
+            addElement(drag, new URL('assets/timeblue.svg', import.meta.url), 'Time has passed', 'When <span>10 seconds</span> have passed</div>');
         } else if (drag.querySelector(".blockelemtype").value == "4") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/errorblue.svg'><p class='blockyname'>Error prompt</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Error 1</span> is triggered</div>";
+            addElement(drag, new URL('assets/errorblue.svg', import.meta.url), 'Error prompt', 'When <span>Error 1</span> is triggered</div>')
         } else if (drag.querySelector(".blockelemtype").value == "5") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/databaseorange.svg'><p class='blockyname'>New database entry</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Add <span>Data object</span> to <span>Database 1</span></div>";
+            addElement(drag, new URL('assets/databaseorange.svg', import.meta.url),'New database entry', 'Add <span>Data object</span> to <span>Database 1</span>');
         } else if (drag.querySelector(".blockelemtype").value == "6") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/databaseorange.svg'><p class='blockyname'>Update database</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Update <span>Database 1</span></div>";
+            addElement(drag, new URL('assets/databaseorange.svg', import.meta.url),'Update database', 'Update <span>Database 1</span>');
         } else if (drag.querySelector(".blockelemtype").value == "7") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>Perform an action</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Perform <span>Action 1</span></div>";
+            addElement(drag, new URL('assets/actionorange.svg', import.meta.url), 'Perform an action', 'Perform <span>Action 1</span>');
         } else if (drag.querySelector(".blockelemtype").value == "8") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/twitterorange.svg'><p class='blockyname'>Make a tweet</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span></div>";
+            addElement(drag, new URL('assets/twitterorange.svg', import.meta.url), 'Make a tweet', 'Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span>');
         } else if (drag.querySelector(".blockelemtype").value == "9") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/logred.svg'><p class='blockyname'>Add new log entry</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Add new <span>success</span> log entry</div>";
+            addElement(drag, new URL('assets/logred.svg', import.meta.url), 'Add new log entry','Add new <span>success</span> log entry');
         } else if (drag.querySelector(".blockelemtype").value == "10") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/logred.svg'><p class='blockyname'>Update logs</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Edit <span>Log Entry 1</span></div>";
+            addElement(drag, new URL('assets/logred.svg', import.meta.url), 'Update logs', 'Edit <span>Log Entry 1</span>');
         } else if (drag.querySelector(".blockelemtype").value == "11") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/errorred.svg'><p class='blockyname'>Prompt an error</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Trigger <span>Error 1</span></div>";
+            addElement(drag, new URL('assets/errorred.svg', import.meta.url), 'Prompt an error', 'Trigger <span>Error 1</span>');
         }
         return true;
     }
