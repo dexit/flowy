@@ -25,6 +25,6 @@ export class FlowyObject {
     beginDrag: (event: any) => void;
     endDrag: (event: any) => void;
     moveBlock: (event: any) => void;
-    constructor(canvas: HTMLCanvasElement, grab: GrabHandler, release: ReleaseHandler, snapping: SnappingHandler, rearrange: RearrangegHandler, spacing_x: number, spacing_y: number);
+    constructor(canvas: HTMLCanvasElement, grab?: GrabHandler, release?: ReleaseHandler, snapping?: SnappingHandler, rearrange?: RearrangegHandler, spacing_x?: number, spacing_y?: number);
 }
-export const newflowy: (canvas: HTMLCanvasElement, grab: GrabHandler, release: ReleaseHandler, snapping: SnappingHandler, rearrange: RearrangegHandler, spacing_x: number, spacing_y: number) => FlowyObject;
+export const newflowy: (canvas: HTMLCanvasElement, grab?: GrabHandler, release?: ReleaseHandler, snapping?: SnappingHandler, rearrange?: RearrangegHandler, spacing_x?: number, spacing_y?: number) => FlowyObject;

@@ -79,12 +79,12 @@ export class FlowyObject {
     }
 
     constructor(canvas: HTMLCanvasElement,
-        grab: GrabHandler,
-        release: ReleaseHandler,
-        snapping: SnappingHandler,
-        rearrange: RearrangegHandler,
-        spacing_x: number,
-        spacing_y: number) {
+        grab?: GrabHandler,
+        release?: ReleaseHandler,
+        snapping?: SnappingHandler,
+        rearrange?: RearrangegHandler,
+        spacing_x?: number,
+        spacing_y?: number) {
         if (!grab) {
             grab = () => { };
         }
@@ -135,8 +135,8 @@ export class FlowyObject {
                 absy = canvas_div.getBoundingClientRect().top;
             }
             let active = false;
-            let paddingx = spacing_x;
-            let paddingy = spacing_y;
+            let paddingx = spacing_x!;
+            let paddingy = spacing_y!;
             let offsetleft = 0
             let rearrange = false;
             let drag: HTMLElement
@@ -733,19 +733,19 @@ export class FlowyObject {
         }
 
         function blockGrabbed(block: Block) {
-            grab(block);
+            grab!(block);
         }
 
         function blockReleased() {
-            release();
+            release!();
         }
 
         function blockSnap(drag: HTMLElement, first: boolean, parent?: HTMLElement) {
-            return snapping(drag, first, parent);
+            return snapping!(drag, first, parent);
         }
 
         function beforeDelete(drag: HTMLElement, parent: Block) {
-            return rearrange(drag, parent);
+            return rearrange!(drag, parent);
         }
 
         function addEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
@@ -769,10 +769,10 @@ export class FlowyObject {
 
 export const newflowy = (
     canvas: HTMLCanvasElement,
-    grab: GrabHandler,
-    release: ReleaseHandler,
-    snapping: SnappingHandler,
-    rearrange: RearrangegHandler,
-    spacing_x: number,
-    spacing_y: number) => 
+    grab?: GrabHandler,
+    release?: ReleaseHandler,
+    snapping?: SnappingHandler,
+    rearrange?: RearrangegHandler,
+    spacing_x?: number,
+    spacing_y?: number) => 
         (new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y))
