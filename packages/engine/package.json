@@ -1,15 +1,16 @@
 {
-  "name": "folwy-engine",
+  "name": "flowy-engine",
   "version": "1.0.0",
   "description": "",
   "main": "dist/flowy.js",
+  "types": "dist/flowy.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "typescript": "^5.0.2"
   }

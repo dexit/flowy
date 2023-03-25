@@ -1,3 +1,5 @@
+import { newflowy } from 'flowy-engine'
+
 document.addEventListener("DOMContentLoaded", function(){
     var rightcard = false;
     var tempblock;

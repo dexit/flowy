@@ -2,15 +2,16 @@
   "name": "flowy-demo",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "source": "index.html",
   "scripts": {
-    "start": "parcel index.html",
+    "build": "parcel build",
+    "start": "parcel",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "engine": "*"
+    "flowy-engine": "*"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }

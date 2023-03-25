@@ -1,4 +1,35 @@
 
+type GrabHandler        = ( block:Block ) => void 
+type ReleaseHandler     = () => void 
+type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
+type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
+type Point              = { x:number, y:number }
+
+interface Block {
+    childwidth: number
+    parent: number
+    id: number
+    x: number
+    y: number
+    width: number
+    height: number
+
+}
+
+interface BlockData {
+    id: number
+    parent: number
+    data: Array<{ name: string | null, value: string }>
+    attr: Array<Record<string, any>>
+}
+
+interface Output {
+    html: string
+    blockarr: Array<Block>
+    blocks: Array<any>
+}
+
+type ActionType = 'drop' | 'rearrange'
 function toInt(value: number | string) {
     if (typeof (value) === 'number')
         return parseInt(`${value}`)
@@ -6,7 +37,7 @@ function toInt(value: number | string) {
         return parseInt(value)
 }
 
-class FlowyObject {
+export class FlowyObject {
 
     load: () => void
     import!: (output: Output) => void
@@ -735,13 +766,12 @@ class FlowyObject {
 }
 
 
-var newflowy = function (
+export const newflowy = (
     canvas: HTMLCanvasElement,
     grab: GrabHandler,
     release: ReleaseHandler,
     snapping: SnappingHandler,
     rearrange: RearrangegHandler,
     spacing_x: number,
-    spacing_y: number) {
-    return new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y)
-}
+    spacing_y: number) => 
+        (new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y))

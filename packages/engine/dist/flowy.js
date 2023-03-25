@@ -11,6 +11,8 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _FlowyObject_instances, _FlowyObject_blockidValue, _FlowyObject_queryBlockidByValue, _FlowyObject_queryArrowidByValue, _FlowyObject_QS, _FlowyObject_QSP, _FlowyObject_indicator_get;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.newflowy = exports.FlowyObject = void 0;
 function toInt(value) {
     if (typeof (value) === 'number')
         return parseInt(`${value}`);
@@ -699,6 +701,7 @@ class FlowyObject {
         this.load();
     }
 }
+exports.FlowyObject = FlowyObject;
 _FlowyObject_blockidValue = new WeakMap(), _FlowyObject_instances = new WeakSet(), _FlowyObject_queryBlockidByValue = function _FlowyObject_queryBlockidByValue(value) {
     var _a;
     return (_a = document.querySelector(`.blockid[value='${value}']`)) === null || _a === void 0 ? void 0 : _a.parentNode;
@@ -719,6 +722,5 @@ _FlowyObject_blockidValue = new WeakMap(), _FlowyObject_instances = new WeakSet(
 }, _FlowyObject_indicator_get = function _FlowyObject_indicator_get() {
     return document.querySelector(".indicator");
 };
-var newflowy = function (canvas, grab, release, snapping, rearrange, spacing_x, spacing_y) {
-    return new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y);
-};
+const newflowy = (canvas, grab, release, snapping, rearrange, spacing_x, spacing_y) => (new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y));
+exports.newflowy = newflowy;
