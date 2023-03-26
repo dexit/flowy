@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "source": "index.html",
+  "browserslist": "> 1%, last 2 versions, not dead",
   "scripts": {
     "build": "parcel build --no-source-maps",
     "start": "parcel",

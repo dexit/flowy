@@ -1,4 +1,4 @@
-import { newflowy } from 'flowy-engine'
+import 'flowy-engine/dist/flowy.js' 
 import { html, render } from 'lit-html'
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js'
 
@@ -101,7 +101,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     renderX(blocklist, menu_item[0])
 
-    const flowy = newflowy(document.getElementById("canvas") as HTMLCanvasElement, drag, release, snapping);
+    const flowy = document.getElementById('flowy') as any
+
+    flowy.addEventListener( 'grab', (event:CustomEvent) => drag(event.detail), false)
+    flowy.addEventListener( 'release', () => release(), false)
+
+    console.dir( flowy )
+    flowy.registerSnapping( snapping )
 
     function addEventListenerMulti(type: string, listener: (event: any) => void, capture: boolean, selector: string) {
         const nodes = document.querySelectorAll(selector);

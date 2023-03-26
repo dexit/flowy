@@ -1,7 +1,9 @@
+import {LitElement, html} from 'lit';
+import {query} from 'lit/decorators/query.js';
+import {customElement, property} from 'lit/decorators.js';
+
 import './flowy.css'
 
-type GrabHandler        = ( block:Block ) => void 
-type ReleaseHandler     = () => void 
 type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
 type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
 
@@ -36,9 +38,36 @@ function toInt(value: number | string) {
         return parseInt(value)
 }
 
-export class FlowyObject {
+@customElement('flowy-diagram')
+class FlowyDiagram extends LitElement {
 
-    load: () => void
+    @query('#canvas')
+    _canvas!: HTMLCanvasElement;
+
+    @query('.indicator')
+    _indicator!: HTMLElement;
+
+    @property( { type: 'number'} )
+    spacing_x = 20
+
+    @property( { type: 'number'} )
+    spacing_y = 80
+
+    #snapping: SnappingHandler = () => true
+    registerSnapping( handler: SnappingHandler ) {
+        this.#snapping = handler
+    }
+
+    #rearrange: RearrangegHandler = () => false
+    registerRearrange( handler: RearrangegHandler ) {
+        this.#rearrange = handler
+    }
+
+    render() {
+        return html`<div id="canvas">`
+    }
+
+    load!: () => void
     import!: (output: Output) => void
     output!: () => Output | undefined
     deleteBlocks!: () => void
@@ -49,16 +78,17 @@ export class FlowyObject {
     #blockidValue!: () => { value: string, toInt: () => number }
 
     #queryBlockidByValue(value: number | string) {
-        return document.querySelector(`.blockid[value='${value}']`)?.parentNode as HTMLElement
+        return this.#QSP<HTMLElement>(`.blockid[value='${value}']`)
     }
 
     #queryArrowidByValue(value: number | string) {
-        return document.querySelector(`.arrowid[value='${value}']`)?.parentNode as HTMLElement
+        return this.#QSP<HTMLElement>(`.arrowid[value='${value}']`)
     }
 
 
     #QS<T extends Element>(selector: string): T | null {
         const n = document.querySelector(selector) as T
+        // const n = this.renderRoot?.querySelector(selector) as T
         if (!n) console.warn(`element not found for ${selector}`)
         return n
     }
@@ -72,35 +102,21 @@ export class FlowyObject {
         return parent
     }
 
-    get #indicator(): HTMLElement {
-        return document.querySelector(".indicator") as HTMLElement
+    /**
+     * disable shadow root
+     * 
+     * @returns 
+     * @see [How to create LitElement without Shadow DOM?](https://stackoverflow.com/a/55213037/521197)
+     */
+    createRenderRoot() {
+        return this;
     }
 
-    constructor(canvas: HTMLCanvasElement,
-        grab?: GrabHandler,
-        release?: ReleaseHandler,
-        snapping?: SnappingHandler,
-        rearrange?: RearrangegHandler,
-        spacing_x?: number,
-        spacing_y?: number) {
-        if (!grab) {
-            grab = () => { };
-        }
-        if (!release) {
-            release = () => { };
-        }
-        if (!snapping) {
-            snapping = () => true
-        }
-        if (!rearrange) {
-            rearrange = () => false
-        }
-        if (!spacing_x) {
-            spacing_x = 20;
-        }
-        if (!spacing_y) {
-            spacing_y = 80;
-        }
+    connectedCallback() {
+        super.connectedCallback()
+    }
+
+    firstUpdated() {
 
         let loaded = false;
         this.load = () => {
@@ -110,7 +126,7 @@ export class FlowyObject {
                 return;
             let blocks = Array<Block>();
             let blockstemp = Array<Block>();
-            let canvas_div = canvas;
+            let canvas_div = this._canvas;
             let absx = 0;
             let absy = 0;
             if (window.getComputedStyle(canvas_div).position == "absolute" || window.getComputedStyle(canvas_div).position == "fixed") {
@@ -118,8 +134,8 @@ export class FlowyObject {
                 absy = canvas_div.getBoundingClientRect().top;
             }
             let active = false;
-            let paddingx = spacing_x!;
-            let paddingy = spacing_y!;
+            let paddingx = this.spacing_x
+            let paddingy = this.spacing_y
             let offsetleft = 0
             let rearrange = false;
             let drag: HTMLElement
@@ -180,7 +196,7 @@ export class FlowyObject {
                             data: [],
                             attr: []
                         });
-                        let blockParent = this.#QSP(".blockid[value='" + blocks[i].id + "']")
+                        let blockParent = this.#queryBlockidByValue(blocks[i].id)
                         blockParent?.querySelectorAll("input").forEach(block => {
                             let json_name = block.getAttribute("name");
                             let json_value = block.value;
@@ -228,7 +244,7 @@ export class FlowyObject {
                     if (blocks.length === 0) {
                         newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + blocks.length + "'>";
                         document.body.appendChild(newNode);
-                        drag = this.#QSP(".blockid[value='" + blocks.length + "']")!
+                        drag = this.#queryBlockidByValue(blocks.length)
                     } else {
 
                         const max = blocks.reduce((result, a) => Math.max(result, a.id), 0)
@@ -251,8 +267,8 @@ export class FlowyObject {
                 if (event.which != 3 && (active || rearrange)) {
                     dragblock = false;
                     blockReleased();
-                    if (!this.#indicator.classList.contains("invisible")) {
-                        this.#indicator.classList.add("invisible");
+                    if (!this._indicator.classList.contains("invisible")) {
+                        this._indicator.classList.add("invisible");
                     }
                     if (active) {
                         original.classList.remove("dragnow");
@@ -319,7 +335,7 @@ export class FlowyObject {
             }
 
             const removeSelection = () => {
-                canvas_div.appendChild(this.#indicator);
+                canvas_div.appendChild(this._indicator);
                 drag.parentNode?.removeChild(drag);
             }
 
@@ -606,14 +622,14 @@ export class FlowyObject {
                     let blocko = blocks.map(a => a.id);
                     for (let i = 0; i < blocks.length; i++) {
                         if (checkAttach(blocko[i])) {
-                            this.#queryBlockidByValue(blocko[i]).appendChild(this.#indicator);
-                            this.#indicator.style.left = (this.#queryBlockidByValue(blocko[i]).offsetWidth / 2) - 5 + "px";
-                            this.#indicator.style.top = this.#queryBlockidByValue(blocko[i]).offsetHeight + "px";
-                            this.#indicator.classList.remove("invisible");
+                            this.#queryBlockidByValue(blocko[i]).appendChild(this._indicator);
+                            this._indicator.style.left = (this.#queryBlockidByValue(blocko[i]).offsetWidth / 2) - 5 + "px";
+                            this._indicator.style.top = this.#queryBlockidByValue(blocko[i]).offsetHeight + "px";
+                            this._indicator.classList.remove("invisible");
                             break;
                         } else if (i == blocks.length - 1) {
-                            if (!this.#indicator.classList.contains("invisible")) {
-                                this.#indicator.classList.add("invisible");
+                            if (!this._indicator.classList.contains("invisible")) {
+                                this._indicator.classList.add("invisible");
                             }
                         }
                     }
@@ -715,20 +731,24 @@ export class FlowyObject {
             document.addEventListener("touchend", this.endDrag, false);
         }
 
-        function blockGrabbed(block: Block) {
-            grab!(block);
+        const blockGrabbed = (block: Block) => {
+            const event = new CustomEvent<Block>('grab', {
+                detail: block
+            })
+            this.dispatchEvent(event);
         }
 
-        function blockReleased() {
-            release!();
+        const blockReleased = () => {
+            const event = new CustomEvent<void>('release')
+            this.dispatchEvent(event);
         }
 
-        function blockSnap(drag: HTMLElement, first: boolean, parent?: HTMLElement) {
-            return snapping!(drag, first, parent);
+        const blockSnap = (drag: HTMLElement, first: boolean, parent?: HTMLElement) => {
+            return this.#snapping(drag, first, parent);
         }
 
-        function beforeDelete(drag: HTMLElement, parent: Block) {
-            return rearrange!(drag, parent);
+        const beforeDelete = (drag: HTMLElement, parent: Block) => {
+            return this.#rearrange(drag, parent);
         }
 
         function addEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
@@ -748,14 +768,3 @@ export class FlowyObject {
         this.load();
     }
 }
-
-
-export const newflowy = (
-    canvas: HTMLCanvasElement,
-    grab?: GrabHandler,
-    release?: ReleaseHandler,
-    snapping?: SnappingHandler,
-    rearrange?: RearrangegHandler,
-    spacing_x?: number,
-    spacing_y?: number) => 
-        (new FlowyObject(canvas, grab, release, snapping, rearrange, spacing_x, spacing_y))
