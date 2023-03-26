@@ -1,5 +1,6 @@
 {
   "name": "flowy-engine",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "source": "src/flowy.ts",

@@ -2,6 +2,7 @@
   "name": "flowy-demo",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "source": "index.html",
   "browserslist": "> 1%, last 2 versions, not dead",
   "scripts": {

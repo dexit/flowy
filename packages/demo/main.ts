@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function snapping(drag, first) {
+    function snapping(drag:HTMLElement, first:boolean) {
         const grab = drag.querySelector(".grabme");
         grab.parentNode.removeChild(grab);
         const blockin = drag.querySelector(".blockin");
@@ -160,21 +160,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    const disabledClick = function () {
+    const disabledClick = function (event:Event) {
+        const target = event.target as HTMLElement
+        
         document.querySelector(".navactive")?.classList.add("navdisabled");
         document.querySelector(".navactive")?.classList.remove("navactive");
-        this.classList.add("navactive");
-        this.classList.remove("navdisabled");
+        target.classList.add("navactive");
+        target.classList.remove("navdisabled");
 
-        if (this.getAttribute("id") == "triggers") {
+        if (target.getAttribute("id") == "triggers") {
 
             renderX(blocklist, menu_item[0])
 
-        } else if (this.getAttribute("id") == "actions") {
+        } else if (target.getAttribute("id") == "actions") {
 
             renderX(blocklist, menu_item[1])
 
-        } else if (this.getAttribute("id") == "loggers") {
+        } else if (target.getAttribute("id") == "loggers") {
 
             renderX(blocklist, menu_item[2])
 
