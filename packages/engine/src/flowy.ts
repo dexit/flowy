@@ -42,6 +42,7 @@ function toInt(value: number | string) {
 @customElement('flowy-diagram')
 export class FlowyDiagram extends LitElement {
 
+    // css seems doesn't work without shadow dom
     // static styles = css`
     // p {
     //   color: green;
