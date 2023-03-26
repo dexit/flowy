@@ -4,7 +4,6 @@ type GrabHandler        = ( block:Block ) => void
 type ReleaseHandler     = () => void 
 type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
 type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
-type Point              = { x:number, y:number }
 
 interface Block {
     childwidth: number
@@ -14,7 +13,6 @@ interface Block {
     y: number
     width: number
     height: number
-
 }
 
 interface BlockData {
@@ -103,21 +101,6 @@ export class FlowyObject {
         if (!spacing_y) {
             spacing_y = 80;
         }
-        // if (!Element.prototype.matches) {
-        //     Element.prototype.matches = Element.prototype.msMatchesSelector ||
-        //         Element.prototype.webkitMatchesSelector;
-        // }
-
-        // if (!Element.prototype.closest) {
-        //     Element.prototype.closest = function(s) {
-        //         let el = this;
-        //         do {
-        //             if (Element.prototype.matches.call(el, s)) return el;
-        //             el = el.parentElement || el.parentNode;
-        //         } while (el !== null && el.nodeType === 1);
-        //         return null;
-        //     };
-        // }    
 
         let loaded = false;
         this.load = () => {
@@ -187,7 +170,7 @@ export class FlowyObject {
                 let json_data: Output = {
                     html: html_ser,
                     blockarr: blocks,
-                    blocks: []
+                    blocks: Array<BlockData>()
                 };
                 if (blocks.length > 0) {
                     for (let i = 0; i < blocks.length; i++) {
