@@ -4,10 +4,10 @@ import {customElement, property} from 'lit/decorators.js';
 
 import './flowy.css'
 
-type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
-type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
+export type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
+export type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
 
-interface Block {
+export interface Block {
     childwidth: number
     parent: number
     id: number
@@ -17,20 +17,21 @@ interface Block {
     height: number
 }
 
-interface BlockData {
+export interface BlockData {
     id: number
     parent: number
     data: Array<{ name: string | null, value: string }>
     attr: Array<Record<string, any>>
 }
 
-interface Output {
+export interface Output {
     html: string
     blockarr: Array<Block>
     blocks: Array<any>
 }
 
 type ActionType = 'drop' | 'rearrange'
+
 function toInt(value: number | string) {
     if (typeof (value) === 'number')
         return parseInt(`${value}`)
@@ -39,7 +40,13 @@ function toInt(value: number | string) {
 }
 
 @customElement('flowy-diagram')
-class FlowyDiagram extends LitElement {
+export class FlowyDiagram extends LitElement {
+
+    // static styles = css`
+    // p {
+    //   color: green;
+    // }
+    // `
 
     @query('#canvas')
     _canvas!: HTMLCanvasElement;
@@ -78,25 +85,24 @@ class FlowyDiagram extends LitElement {
     #blockidValue!: () => { value: string, toInt: () => number }
 
     #queryBlockidByValue(value: number | string) {
-        return this.#QSP<HTMLElement>(`.blockid[value='${value}']`)
+        return this.#QSP(`.blockid[value='${value}']`)
     }
 
     #queryArrowidByValue(value: number | string) {
-        return this.#QSP<HTMLElement>(`.arrowid[value='${value}']`)
+        return this.#QSP(`.arrowid[value='${value}']`)
     }
 
-
-    #QS<T extends Element>(selector: string): T | null {
+    #QS<T extends Element>(selector: string): T  {
         const n = document.querySelector(selector) as T
         // const n = this.renderRoot?.querySelector(selector) as T
         if (!n) console.warn(`element not found for ${selector}`)
         return n
     }
 
-    #QSP<T extends Element>(selector: string): T | null {
-        const n = this.#QS(selector)
+    #QSP<T extends HTMLElement = HTMLElement>(selector: string): T{
+        const n = this.#QS<T>(selector)
 
-        const parent = n?.parentNode as T
+        const parent = n?.parentElement as T
 
         if (!parent) console.warn(`parent not found for ${selector}`)
         return parent

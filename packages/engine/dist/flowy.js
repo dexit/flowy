@@ -3,7 +3,12 @@ import {html as $fe6qx$html, LitElement as $fe6qx$LitElement} from "lit";
 import {query as $fe6qx$query} from "lit/decorators/query.js";
 import {property as $fe6qx$property, customElement as $fe6qx$customElement} from "lit/decorators.js";
 
+function $parcel$export(e, n, v, s) {
+  Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
+}
 var $7712d7abb20ba789$exports = {};
+
+$parcel$export($7712d7abb20ba789$exports, "FlowyDiagram", function () { return $7712d7abb20ba789$export$ed9fc9039e390ef3; }, function (v) { return $7712d7abb20ba789$export$ed9fc9039e390ef3 = v; });
 
 
 
@@ -30,8 +35,13 @@ function $7712d7abb20ba789$var$toInt(value) {
     if (typeof value === "number") return parseInt(`${value}`);
     else return parseInt(value);
 }
-let $7712d7abb20ba789$var$FlowyDiagram = class FlowyDiagram extends (0, $fe6qx$LitElement) {
+let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $fe6qx$LitElement) {
     constructor(){
+        // static styles = css`
+        // p {
+        //   color: green;
+        // }
+        // `
         super(...arguments);
         $7712d7abb20ba789$var$_FlowyDiagram_instances.add(this);
         this.spacing_x = 20;
@@ -613,29 +623,29 @@ $7712d7abb20ba789$var$_FlowyDiagram_snapping = new WeakMap(), $7712d7abb20ba789$
     return n;
 }, $7712d7abb20ba789$var$_FlowyDiagram_QSP = function _FlowyDiagram_QSP(selector) {
     const n = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_QS).call(this, selector);
-    const parent = n === null || n === void 0 ? void 0 : n.parentNode;
+    const parent = n === null || n === void 0 ? void 0 : n.parentElement;
     if (!parent) console.warn(`parent not found for ${selector}`);
     return parent;
 };
 $7712d7abb20ba789$var$__decorate([
     (0, $fe6qx$query)("#canvas")
-], $7712d7abb20ba789$var$FlowyDiagram.prototype, "_canvas", void 0);
+], $7712d7abb20ba789$export$ed9fc9039e390ef3.prototype, "_canvas", void 0);
 $7712d7abb20ba789$var$__decorate([
     (0, $fe6qx$query)(".indicator")
-], $7712d7abb20ba789$var$FlowyDiagram.prototype, "_indicator", void 0);
+], $7712d7abb20ba789$export$ed9fc9039e390ef3.prototype, "_indicator", void 0);
 $7712d7abb20ba789$var$__decorate([
     (0, $fe6qx$property)({
         type: "number"
     })
-], $7712d7abb20ba789$var$FlowyDiagram.prototype, "spacing_x", void 0);
+], $7712d7abb20ba789$export$ed9fc9039e390ef3.prototype, "spacing_x", void 0);
 $7712d7abb20ba789$var$__decorate([
     (0, $fe6qx$property)({
         type: "number"
     })
-], $7712d7abb20ba789$var$FlowyDiagram.prototype, "spacing_y", void 0);
-$7712d7abb20ba789$var$FlowyDiagram = $7712d7abb20ba789$var$__decorate([
+], $7712d7abb20ba789$export$ed9fc9039e390ef3.prototype, "spacing_y", void 0);
+$7712d7abb20ba789$export$ed9fc9039e390ef3 = $7712d7abb20ba789$var$__decorate([
     (0, $fe6qx$customElement)("flowy-diagram")
-], $7712d7abb20ba789$var$FlowyDiagram);
+], $7712d7abb20ba789$export$ed9fc9039e390ef3);
 
 
-export {$7712d7abb20ba789$exports as default};
+export {$7712d7abb20ba789$export$ed9fc9039e390ef3 as FlowyDiagram, $7712d7abb20ba789$exports as default};

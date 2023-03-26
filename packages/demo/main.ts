@@ -1,4 +1,5 @@
 import 'flowy-engine/dist/flowy.js' 
+import type { FlowyDiagram } from 'flowy-engine'
 import { html, render } from 'lit-html'
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js'
 
@@ -101,12 +102,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     renderX(blocklist, menu_item[0])
 
-    const flowy = document.getElementById('flowy') as any
+    const flowy = document.getElementById('flowy') as FlowyDiagram
 
-    flowy.addEventListener( 'grab', (event:CustomEvent) => drag(event.detail), false)
+    flowy.addEventListener( 'grab', (event:any) => drag(event.detail), false)
     flowy.addEventListener( 'release', () => release(), false)
 
-    console.dir( flowy )
+    // console.dir( flowy )
     flowy.registerSnapping( snapping )
 
     function addEventListenerMulti(type: string, listener: (event: any) => void, capture: boolean, selector: string) {
@@ -117,12 +118,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function snapping(drag:HTMLElement, first:boolean) {
-        const grab = drag.querySelector(".grabme");
-        grab.parentNode.removeChild(grab);
+        const grab = drag.querySelector(".grabme") as HTMLElement
+        grab.parentElement?.removeChild(grab);
         const blockin = drag.querySelector(".blockin");
-        blockin.parentNode.removeChild(blockin);
+        blockin?.parentElement?.removeChild(blockin);
 
-        const value = drag.querySelector(".blockelemtype").value
+
+        const value = (drag.querySelector(".blockelemtype") as HTMLDataElement).value
         if (value == "1") {
             addElement(drag, eyeblue_img, 'New visitor', 'When a <span>new visitor</span> goes to <span>Site 1</span>')
         } else if (value == "2") {
@@ -162,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const disabledClick = function (event:Event) {
         const target = event.target as HTMLElement
-        
+
         document.querySelector(".navactive")?.classList.add("navdisabled");
         document.querySelector(".navactive")?.classList.remove("navactive");
         target.classList.add("navactive");
