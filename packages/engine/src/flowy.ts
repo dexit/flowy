@@ -1,4 +1,4 @@
-import {LitElement, html} from 'lit';
+import {LitElement, html, render} from 'lit';
 import {query} from 'lit/decorators/query.js';
 import {customElement, property} from 'lit/decorators.js';
 
@@ -386,72 +386,77 @@ export class FlowyDiagram extends LitElement {
                 }
             }
 
+
+            const createOrUpdateArrow = ( id:string|HTMLElement, x:number, y:number, start_x = 20 ) => {
+
+                let arrow:HTMLElement
+                if( typeof(id) === 'string') {
+                    arrow = document.createElement('div')
+                    arrow.setAttribute( 'id', id )
+                    arrow.classList.add( 'arrowblock')
+                }
+                else {
+                    arrow = id
+                }
+
+                const content = html`
+                    <input type="hidden" class="arrowid" value="${arrow.id}">
+                    <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M${start_x} 0 L${start_x} ${paddingy/2} L${x} ${paddingy/2} L${x} ${y}" 
+                            stroke="#C5CCD0" 
+                            stroke-width="2px"/>
+                        <path d="M${x - 5} ${y - 5} H${x + 5} L${x} ${y} L${x - 5} ${y - 5} Z" 
+                            fill="#C5CCD0"/>
+                    </svg>
+                    `
+                render( content, arrow )
+
+                return arrow
+            }
+
             const drawArrow = (arrow: Block, x: number, y: number, id: number) => {
 
                 const _blk = blocks.find(a => a.id == id)!
                 const _bid_val = this.#blockidValue().value
 
+                const adjustment = (absx + window.scrollX) - canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left
+               
+                let el:HTMLElement 
+                
                 if (x < 0) {
-                    canvas_div.innerHTML += `
-                        <div class="arrowblock">
-                            <input type="hidden" class="arrowid" value="${_bid_val}">
-                            <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M${(_blk.x - arrow.x + 5) } 0L${(_blk.x - arrow.x + 5) } ${(paddingy / 2) }L5 ${(paddingy / 2) }L5 ${y }" 
-                                    stroke="#C5CCD0" 
-                                    stroke-width="2px"/>
-                                <path d="M0 ${(y - 5) }H10L5 ${y }L0 ${(y - 5) }Z" 
-                                    fill="#C5CCD0"/>
-                            </svg>
-                        </div>
-                        `
-                    this.#queryArrowidByValue(_bid_val).style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+
+                    el = createOrUpdateArrow(_bid_val, 5, y, _blk.x - arrow.x + 5 ) 
+                    canvas_div.appendChild(el)
+                    el.style.left = `${arrow.x - 5 - adjustment}px`
+
                 } else {
-                    canvas_div.innerHTML += `
-                        <div class="arrowblock">
-                            <input type="hidden" class="arrowid" value="${_bid_val}">
-                            <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 0L20 ${(paddingy / 2) }L${(x) } ${(paddingy / 2) }L${x } ${y }" 
-                                    stroke="#C5CCD0" 
-                                    stroke-width="2px"/>
-                                <path d="M${(x - 5) } ${(y - 5) }H${(x + 5) }L${x } ${y }L${(x - 5) } ${(y - 5) }Z" 
-                                    fill="#C5CCD0"/>
-                            </svg>
-                        </div>
-                        `
-                        
-                    this.#queryArrowidByValue(_bid_val).style.left = _blk.x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+
+                    el = createOrUpdateArrow(_bid_val, x, y)
+                    canvas_div.appendChild(el)
+                    el.style.left = `${_blk.x - 20 - adjustment}px`
+
                 }
-                this.#queryArrowidByValue(_bid_val).style.top = _blk.y + (_blk.height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
+
+                el.style.top = `${_blk.y + (_blk.height / 2) + canvas_div.getBoundingClientRect().top - absy}px`
             }
 
             const updateArrow = (arrow: Block, x: number, y: number, children: Block) => {
 
                 const _blk = blocks.find(a => a.id == children.parent)!
-                const _arr = this.#queryArrowidByValue(children.id)
+                const el = this.#queryArrowidByValue(children.id)
+
+                const adjustment = (absx + window.scrollX) - canvas_div.getBoundingClientRect().left
 
                 if (x < 0) {
-                    _arr.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
-                    _arr.innerHTML = `
-                        <input type="hidden" class="arrowid" value="${children.id }">
-                            <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M${(_blk.x - arrow.x + 5) } 0L${(_blk.x - arrow.x + 5) } ${(paddingy / 2) }L5 ${(paddingy / 2) }L5 ${y }" 
-                                    stroke="#C5CCD0" 
-                                    stroke-width="2px"/>
-                                <path d="M0 ${(y - 5) }H10L5 ${y }L0 ${(y - 5) }Z" fill="#C5CCD0"/>
-                            </svg>
-                            `
+
+                    createOrUpdateArrow( el, 5, y, _blk.x - arrow.x + 5 )
+                    el.style.left = `${arrow.x - 5 - adjustment}px`
+
                 } else {
-                    _arr.style.left = _blk.x - 20 - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
-                    _arr.innerHTML = `
-                        <input type="hidden" class="arrowid" value="${children.id }">
-                            <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 0L20 ${(paddingy / 2) }L${(x) } ${(paddingy / 2) }L${x } ${y }" 
-                                    stroke="#C5CCD0" 
-                                    stroke-width="2px"/>
-                                <path d="M${(x - 5) } ${(y - 5) }H${(x + 5) }L${x } ${y }L${(x - 5) } ${(y - 5) }Z" 
-                                    fill="#C5CCD0"/>
-                            </svg>
-                            `
+
+                    createOrUpdateArrow( el, x, y )
+                    el.style.left = `${_blk.x - 20 - adjustment}px` 
+
                 }
             }
 
@@ -790,35 +795,34 @@ export class FlowyDiagram extends LitElement {
             const event = new CustomEvent<Block>('grab', {
                 detail: block
             })
-            this.dispatchEvent(event);
+            this.dispatchEvent(event)
         }
 
         const blockReleased = () => {
             const event = new CustomEvent<void>('release')
-            this.dispatchEvent(event);
+            this.dispatchEvent(event)
         }
 
-        const blockSnap = (drag: HTMLElement, first: boolean, parent?: HTMLElement) => {
-            return this.#snapping(drag, first, parent);
-        }
+        const blockSnap = (drag: HTMLElement, first: boolean, parent?: HTMLElement) => 
+            this.#snapping(drag, first, parent)
+        
 
-        const beforeDelete = (drag: HTMLElement, parent: Block) => {
-            return this.#rearrange(drag, parent);
-        }
+        const beforeDelete = (drag: HTMLElement, parent: Block) => 
+            this.#rearrange(drag, parent)
 
-        function addEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
-            let nodes = document.querySelectorAll(selector);
-            for (let i = 0; i < nodes.length; i++) {
-                nodes[i].addEventListener(type, listener, capture);
-            }
-        }
+        // function addEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
+        //     let nodes = document.querySelectorAll(selector);
+        //     for (let i = 0; i < nodes.length; i++) {
+        //         nodes[i].addEventListener(type, listener, capture);
+        //     }
+        // }
 
-        function removeEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
-            let nodes = document.querySelectorAll(selector);
-            for (let i = 0; i < nodes.length; i++) {
-                nodes[i].removeEventListener(type, listener, capture);
-            }
-        }
+        // function removeEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
+        //     let nodes = document.querySelectorAll(selector);
+        //     for (let i = 0; i < nodes.length; i++) {
+        //         nodes[i].removeEventListener(type, listener, capture);
+        //     }
+        // }
 
         this.load();
     }
