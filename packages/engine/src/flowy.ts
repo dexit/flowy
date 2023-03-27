@@ -387,22 +387,28 @@ export class FlowyDiagram extends LitElement {
             }
 
             const drawArrow = (arrow: Block, x: number, y: number, id: number) => {
+
+                const _blk = blocks.find(a => a.id == id)!
+                const _bid_val = this.#blockidValue().value
+
                 if (x < 0) {
                     canvas_div.innerHTML += `
                         <div class="arrowblock">
-                            <input type="hidden" class="arrowid" value="${this.#blockidValue().value }">
+                            <input type="hidden" class="arrowid" value="${_bid_val}">
                             <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M${(blocks.filter(a => a.id == id)[0].x - arrow.x + 5) } 0L${(blocks.filter(a => a.id == id)[0].x - arrow.x + 5) } ${(paddingy / 2) }L5 ${(paddingy / 2) }L5 ${y }" 
-                                    stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ${(y - 5) }H10L5 ${y }L0 ${(y - 5) }Z" 
+                                <path d="M${(_blk.x - arrow.x + 5) } 0L${(_blk.x - arrow.x + 5) } ${(paddingy / 2) }L5 ${(paddingy / 2) }L5 ${y }" 
+                                    stroke="#C5CCD0" 
+                                    stroke-width="2px"/>
+                                <path d="M0 ${(y - 5) }H10L5 ${y }L0 ${(y - 5) }Z" 
                                     fill="#C5CCD0"/>
                             </svg>
                         </div>
                         `
-                    this.#queryArrowidByValue(this.#blockidValue().value).style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+                    this.#queryArrowidByValue(_bid_val).style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
                 } else {
                     canvas_div.innerHTML += `
                         <div class="arrowblock">
-                            <input type="hidden" class="arrowid" value="${this.#blockidValue().value }">
+                            <input type="hidden" class="arrowid" value="${_bid_val}">
                             <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M20 0L20 ${(paddingy / 2) }L${(x) } ${(paddingy / 2) }L${x } ${y }" 
                                     stroke="#C5CCD0" 
@@ -413,26 +419,30 @@ export class FlowyDiagram extends LitElement {
                         </div>
                         `
                         
-                    this.#queryArrowidByValue(this.#blockidValue().toInt()).style.left = blocks.filter(a => a.id == id)[0].x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
+                    this.#queryArrowidByValue(_bid_val).style.left = _blk.x - 20 - (absx + window.scrollX) + canvas_div.scrollLeft + canvas_div.getBoundingClientRect().left + "px";
                 }
-                this.#queryArrowidByValue(this.#blockidValue().toInt()).style.top = blocks.filter(a => a.id == id)[0].y + (blocks.filter(a => a.id == id)[0].height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
+                this.#queryArrowidByValue(_bid_val).style.top = _blk.y + (_blk.height / 2) + canvas_div.getBoundingClientRect().top - absy + "px";
             }
 
             const updateArrow = (arrow: Block, x: number, y: number, children: Block) => {
+
+                const _blk = blocks.find(a => a.id == children.parent)!
+                const _arr = this.#queryArrowidByValue(children.id)
+
                 if (x < 0) {
-                    this.#queryArrowidByValue(children.id).style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
-                    this.#queryArrowidByValue(children.id).innerHTML = `
+                    _arr.style.left = (arrow.x - 5) - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
+                    _arr.innerHTML = `
                         <input type="hidden" class="arrowid" value="${children.id }">
                             <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M${(blocks.filter(id => id.id == children.parent)[0].x - arrow.x + 5) } 0L${(blocks.filter(id => id.id == children.parent)[0].x - arrow.x + 5) } ${(paddingy / 2) }L5 ${(paddingy / 2) }L5 ${y }" 
+                                <path d="M${(_blk.x - arrow.x + 5) } 0L${(_blk.x - arrow.x + 5) } ${(paddingy / 2) }L5 ${(paddingy / 2) }L5 ${y }" 
                                     stroke="#C5CCD0" 
                                     stroke-width="2px"/>
                                 <path d="M0 ${(y - 5) }H10L5 ${y }L0 ${(y - 5) }Z" fill="#C5CCD0"/>
                             </svg>
                             `
                 } else {
-                    this.#queryArrowidByValue(children.id).style.left = blocks.filter(id => id.id == children.parent)[0].x - 20 - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
-                    this.#queryArrowidByValue(children.id).innerHTML = `
+                    _arr.style.left = _blk.x - 20 - (absx + window.scrollX) + canvas_div.getBoundingClientRect().left + "px";
+                    _arr.innerHTML = `
                         <input type="hidden" class="arrowid" value="${children.id }">
                             <svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M20 0L20 ${(paddingy / 2) }L${(x) } ${(paddingy / 2) }L${x } ${y }" 

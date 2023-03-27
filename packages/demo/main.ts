@@ -107,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
     flowy.addEventListener( 'grab', (event:any) => drag(event.detail), false)
     flowy.addEventListener( 'release', () => release(), false)
 
-    // console.dir( flowy )
     flowy.registerSnapping( snapping )
 
     function addEventListenerMulti(type: string, listener: (event: any) => void, capture: boolean, selector: string) {
@@ -123,9 +122,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const blockin = drag.querySelector(".blockin");
         blockin?.parentElement?.removeChild(blockin);
 
-
         const value = (drag.querySelector(".blockelemtype") as HTMLDataElement).value
         if (value == "1") {
+            console.log( 'eyeblue_img', eyeblue_img );
             addElement(drag, eyeblue_img, 'New visitor', 'When a <span>new visitor</span> goes to <span>Site 1</span>')
         } else if (value == "2") {
             addElement(drag, actionblue_img, 'Action is performed', 'When <span>Action 1</span> is performed')
@@ -187,13 +186,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addEventListenerMulti("click", disabledClick, false, ".side");
 
-    document.getElementById("close")?.addEventListener("click", function () {
+    document.getElementById("close")?.addEventListener("click", () => {
         if (rightcard) {
             rightcard = false;
             document.getElementById("properties")?.classList.remove("expanded");
-            setTimeout(function () {
-                document.getElementById("propwrap")?.classList.remove("itson");
-            }, 300);
+            setTimeout(() =>
+                document.getElementById("propwrap")?.classList.remove("itson"), 300);
             tempblock.classList.remove("selectedblock");
         }
     });
@@ -203,20 +201,26 @@ document.addEventListener("DOMContentLoaded", function () {
     let aclick = false;
     let noinfo = false;
 
-    const beginTouch = (event: any) => {
+    const beginTouch = (event: Event) => {
+        const target = event.target as HTMLElement
+
         aclick = true;
         noinfo = false;
-        if (event.target.closest(".create-flowy")) {
+        if (target.closest(".create-flowy")) {
             noinfo = true;
         }
     }
 
     const checkTouch = () => aclick = false
 
-    const doneTouch = (event: any) => {
+    const doneTouch = (event: Event) => {
+
+        const target = event.target as HTMLElement
+        const closest = target.closest(".block")
+
         if (event.type === "mouseup" && aclick && !noinfo) {
-            if (!rightcard && event.target.closest(".block") && !event.target.closest(".block").classList.contains("dragging")) {
-                tempblock = event.target.closest(".block");
+            if (!rightcard && closest && !closest?.classList.contains("dragging")) {
+                tempblock = closest
                 rightcard = true;
                 document.getElementById("properties")?.classList.add("expanded");
                 document.getElementById("propwrap")?.classList.add("itson");
