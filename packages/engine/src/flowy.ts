@@ -386,7 +386,9 @@ export class FlowyDiagram extends LitElement {
                 console.assert( b!==undefined, `blocks[${id}] not found!`)
 
                 const _style = window.getComputedStyle(drag)
-                console.debug( 'getComputedStyle(drag)', _style.width )
+                const _rect = drag.getBoundingClientRect()
+
+                console.debug( 'drag.getBoundingClientRect()',_rect )
 
                 const xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                 const ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;

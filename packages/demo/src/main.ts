@@ -24,7 +24,7 @@ const twitter_img = new URL('../assets/twitter.svg', import.meta.url)
 const twitterorange_img = new URL('../assets/twitterorange.svg', import.meta.url)
 const log_img = new URL('../assets/log.svg', import.meta.url)
 
-const USE_ELEMENT = false
+const USE_ELEMENT = true
 
 function addElement(drag: HTMLElement, image_url: URL, title: string, html_body: string) {
 
