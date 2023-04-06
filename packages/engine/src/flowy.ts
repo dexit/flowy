@@ -66,6 +66,7 @@ export const createOrUpdateArrow = ( id:string|HTMLElement, x:number, y:number, 
 }
 
 
+
 function hasParentClass(element: HTMLElement, classname: string): boolean {
     if (element.className) {
         if (element.className.split(' ').indexOf(classname) >= 0) return true;
@@ -380,9 +381,12 @@ export class FlowyDiagram extends LitElement {
             }
 
             function checkAttach(id: number) {
+
+                const b = blocks.find( a => a.id == id  )!
+ 
                 const xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                 const ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
-                if (xpos >= blocks.filter(a => a.id == id)[0].x - (blocks.filter(a => a.id == id)[0].width / 2) - paddingx && xpos <= blocks.filter(a => a.id == id)[0].x + (blocks.filter(a => a.id == id)[0].width / 2) + paddingx && ypos >= blocks.filter(a => a.id == id)[0].y - (blocks.filter(a => a.id == id)[0].height / 2) && ypos <= blocks.filter(a => a.id == id)[0].y + blocks.filter(a => a.id == id)[0].height) {
+                if (xpos >= b.x - (b.width / 2) - paddingx && xpos <= b.x + (b.width / 2) + paddingx && ypos >=b.y - (b.height / 2) && ypos <= b.y + b.height) {
                     return true;
                 } else {
                     return false;
@@ -619,8 +623,10 @@ export class FlowyDiagram extends LitElement {
                     mouse_y = event.clientY;
                 }
                 if (dragblock) {
+
                     rearrange = true;
                     drag.classList.add("dragging");
+                    
                     let blockid = this.#dragBlockValue().toInt();
                     prevblock = blocks.filter(a => a.id == blockid)[0].parent;
                     blockstemp.push(blocks.filter(a => a.id == blockid)[0]);
