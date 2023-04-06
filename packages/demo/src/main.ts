@@ -1,41 +1,64 @@
 import 'flowy-engine/dist/flowy.js' 
+import './element' 
+
 import type { FlowyDiagram } from 'flowy-engine'
 import { html, render } from 'lit-html'
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js'
 
-const mode_img = new URL('assets/more.svg', import.meta.url)
-const logred_img = new URL('assets/logred.svg', import.meta.url)
-const databaseorange_img = new URL('assets/databaseorange.svg', import.meta.url)
-const grabme_img = new URL('assets/grabme.svg', import.meta.url)
-const eye_img = new URL('assets/eye.svg', import.meta.url)
-const eyeblue_img = new URL('assets/eyeblue.svg', import.meta.url)
-const action_img = new URL('assets/action.svg', import.meta.url)
-const actionblue_img = new URL('assets/actionblue.svg', import.meta.url)
-const actionorange_img = new URL('assets/actionorange.svg', import.meta.url)
-const time_img = new URL('assets/time.svg', import.meta.url)
-const timeblue_img = new URL('assets/timeblue.svg', import.meta.url)
-const error_img = new URL('assets/error.svg', import.meta.url)
-const errorblue_img = new URL('assets/errorblue.svg', import.meta.url)
-const errorred_img = new URL('assets/errorred.svg', import.meta.url)
-const database_img = new URL('assets/database.svg', import.meta.url)
-const twitter_img = new URL('assets/twitter.svg', import.meta.url)
-const twitterorange_img = new URL('assets/twitterorange.svg', import.meta.url)
-const log_img = new URL('assets/log.svg', import.meta.url)
+const mode_img = new URL('../assets/more.svg', import.meta.url)
+const logred_img = new URL('../assets/logred.svg', import.meta.url)
+const databaseorange_img = new URL('../assets/databaseorange.svg', import.meta.url)
+const grabme_img = new URL('../assets/grabme.svg', import.meta.url)
+const eye_img = new URL('../assets/eye.svg', import.meta.url)
+const eyeblue_img = new URL('../assets/eyeblue.svg', import.meta.url)
+const action_img = new URL('../assets/action.svg', import.meta.url)
+const actionblue_img = new URL('../assets/actionblue.svg', import.meta.url)
+const actionorange_img = new URL('../assets/actionorange.svg', import.meta.url)
+const time_img = new URL('../assets/time.svg', import.meta.url)
+const timeblue_img = new URL('../assets/timeblue.svg', import.meta.url)
+const error_img = new URL('../assets/error.svg', import.meta.url)
+const errorblue_img = new URL('../assets/errorblue.svg', import.meta.url)
+const errorred_img = new URL('../assets/errorred.svg', import.meta.url)
+const database_img = new URL('../assets/database.svg', import.meta.url)
+const twitter_img = new URL('../assets/twitter.svg', import.meta.url)
+const twitterorange_img = new URL('../assets/twitterorange.svg', import.meta.url)
+const log_img = new URL('../assets/log.svg', import.meta.url)
+
+const USE_ELEMENT = false
 
 function addElement(drag: HTMLElement, image_url: URL, title: string, html_body: string) {
 
-    const content = () => html`
-        <div class='blockyleft'>
-            <img src='${image_url}'>
-                <p class='blockyname'>${title}</p>
+    if( USE_ELEMENT ) {
+
+        const e = document.createElement( 'flowy-myelement' )
+        e.setAttribute( 'title', title )
+        e.setAttribute( 'image_url', image_url.toString() )
+        e.setAttribute( 'description', html_body )
+    
+        drag.appendChild( e )
+    
+    }
+    else {
+
+        const content = () => html`
+        <div>
+            <div class='blockyleft'>
+                <img src='${image_url}'>
+                    <p class='blockyname'>${title}</p>
+            </div>
+            <div class='blockyright'>
+                <img src='${mode_img}'>
+            </div>
+            <div class='blockydiv'></div>
+            <div class='blockyinfo'>
+                <span>${unsafeHTML(html_body)}</span>
+            </div>
         </div>
-        <div class='blockyright'>
-            <img src='${mode_img}'>
-        </div>
-        <div class='blockydiv'></div>
-        <div class='blockyinfo'>${unsafeHTML(html_body)}</span></div>
         `
-    render(content(), drag)
+        render(content(), drag)
+    
+    }
+
 
 }
 

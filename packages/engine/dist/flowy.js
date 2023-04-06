@@ -289,10 +289,14 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 }
             };
             function checkAttach(id) {
+                const b = blocks.find((a)=>a.id == id);
+                console.assert(b !== undefined, `blocks[${id}] not found!`);
+                const _style = window.getComputedStyle(drag);
+                console.debug("getComputedStyle(drag)", _style.width);
                 const xpos = drag.getBoundingClientRect().left + window.scrollX + parseInt(window.getComputedStyle(drag).width) / 2 + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                 const ypos = drag.getBoundingClientRect().top + window.scrollY + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
-                if (xpos >= blocks.filter((a)=>a.id == id)[0].x - blocks.filter((a)=>a.id == id)[0].width / 2 - paddingx && xpos <= blocks.filter((a)=>a.id == id)[0].x + blocks.filter((a)=>a.id == id)[0].width / 2 + paddingx && ypos >= blocks.filter((a)=>a.id == id)[0].y - blocks.filter((a)=>a.id == id)[0].height / 2 && ypos <= blocks.filter((a)=>a.id == id)[0].y + blocks.filter((a)=>a.id == id)[0].height) return true;
-                else return false;
+                if (xpos >= b.x - b.width / 2 - paddingx && xpos <= b.x + b.width / 2 + paddingx && ypos >= b.y - b.height / 2 && ypos <= b.y + b.height) return true;
+                return false;
             }
             const removeSelection = ()=>{
                 var _a;
@@ -481,30 +485,32 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     rearrange = true;
                     drag.classList.add("dragging");
                     let blockid = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt();
-                    prevblock = blocks.filter((a)=>a.id == blockid)[0].parent;
-                    blockstemp.push(blocks.filter((a)=>a.id == blockid)[0]);
-                    blocks = blocks.filter(function(e) {
-                        return e.id != blockid;
-                    });
+                    const _pb = blocks.find((a)=>a.id == blockid);
+                    console.assert(_pb !== undefined, "prev block not found!");
+                    prevblock = _pb.parent;
+                    blockstemp.push(_pb);
+                    blocks = blocks.filter((e)=>e.id != blockid);
                     if (blockid != 0) $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_arrowByValue).call(this, blockid).remove();
                     let layer = blocks.filter((a)=>a.parent == blockid);
                     let flag = false;
                     let foundids = Array();
-                    let allids = [];
+                    let allids = Array();
                     while(!flag){
-                        for(let i = 0; i < layer.length; i++)if (layer[i].id != blockid) {
-                            blockstemp.push(blocks.filter((a)=>a.id == layer[i].id)[0]);
-                            const blockParent = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_blockByValue).call(this, layer[i].id);
-                            const arrowParent = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_arrowByValue).call(this, layer[i].id);
+                        layer.filter((l)=>l.id != blockid).map((l)=>l.id).forEach((lid)=>{
+                            const _bb = blocks.find((a)=>a.id == lid);
+                            console.assert(_bb !== undefined, `block[${lid}] not found!`);
+                            blockstemp.push(_bb);
+                            const blockParent = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_blockByValue).call(this, lid);
+                            const arrowParent = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_arrowByValue).call(this, lid);
                             blockParent.style.left = blockParent.getBoundingClientRect().left + window.scrollX - (drag.getBoundingClientRect().left + window.scrollX) + "px";
                             blockParent.style.top = blockParent.getBoundingClientRect().top + window.scrollY - (drag.getBoundingClientRect().top + window.scrollY) + "px";
                             arrowParent.style.left = arrowParent.getBoundingClientRect().left + window.scrollX - (drag.getBoundingClientRect().left + window.scrollX) + "px";
                             arrowParent.style.top = arrowParent.getBoundingClientRect().top + window.scrollY - (drag.getBoundingClientRect().top + window.scrollY) + "px";
                             drag.appendChild(blockParent);
                             drag.appendChild(arrowParent);
-                            foundids.push(layer[i].id);
-                            allids.push(layer[i].id);
-                        }
+                            foundids.push(lid);
+                            allids.push(lid);
+                        });
                         if (foundids.length == 0) flag = true;
                         else {
                             layer = blocks.filter((a)=>foundids.includes(a.parent));
@@ -533,18 +539,20 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     b.y = drag.getBoundingClientRect().top + window.scrollY + parseInt(window.getComputedStyle(drag).height) / 2 + canvas_div.scrollTop;
                 }
                 if (active || rearrange) {
-                    if (mouse_x > canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left - 10 && mouse_x < canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left + 10) canvas_div.scrollLeft += 10;
-                    else if (mouse_x < canvas_div.getBoundingClientRect().left + 10 && mouse_x > canvas_div.getBoundingClientRect().left - 10) canvas_div.scrollLeft -= 10;
-                    else if (mouse_y > canvas_div.getBoundingClientRect().height + canvas_div.getBoundingClientRect().top - 10 && mouse_y < canvas_div.getBoundingClientRect().height + canvas_div.getBoundingClientRect().top + 10) canvas_div.scrollTop += 10;
-                    else if (mouse_y < canvas_div.getBoundingClientRect().top + 10 && mouse_y > canvas_div.getBoundingClientRect().top - 10) canvas_div.scrollLeft -= 10;
-                    let xpos = drag.getBoundingClientRect().left + window.scrollX + parseInt(window.getComputedStyle(drag).width) / 2 + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
-                    let ypos = drag.getBoundingClientRect().top + window.scrollY + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
-                    let blocko = blocks.map((a)=>a.id);
+                    const _rect = canvas_div.getBoundingClientRect();
+                    if (mouse_x > _rect.width + _rect.left - 10 && mouse_x < _rect.width + _rect.left + 10) canvas_div.scrollLeft += 10;
+                    else if (mouse_x < _rect.left + 10 && mouse_x > _rect.left - 10) canvas_div.scrollLeft -= 10;
+                    else if (mouse_y > _rect.height + _rect.top - 10 && mouse_y < _rect.height + _rect.top + 10) canvas_div.scrollTop += 10;
+                    else if (mouse_y < _rect.top + 10 && mouse_y > _rect.top - 10) canvas_div.scrollLeft -= 10;
+                    // let xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
+                    // let ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
+                    const blocko = blocks.map((a)=>a.id);
                     for(let i = 0; i < blocks.length; i++){
                         if (checkAttach(blocko[i])) {
-                            $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_blockByValue).call(this, blocko[i]).appendChild(this._indicator);
-                            this._indicator.style.left = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_blockByValue).call(this, blocko[i]).offsetWidth / 2 - 5 + "px";
-                            this._indicator.style.top = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_blockByValue).call(this, blocko[i]).offsetHeight + "px";
+                            const _b = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_blockByValue).call(this, blocko[i]);
+                            _b.appendChild(this._indicator);
+                            this._indicator.style.left = _b.offsetWidth / 2 - 5 + "px";
+                            this._indicator.style.top = _b.offsetHeight + "px";
                             this._indicator.classList.remove("invisible");
                             break;
                         } else if (i == blocks.length - 1) {

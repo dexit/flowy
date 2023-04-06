@@ -383,14 +383,20 @@ export class FlowyDiagram extends LitElement {
             function checkAttach(id: number) {
 
                 const b = blocks.find( a => a.id == id  )!
- 
+                console.assert( b!==undefined, `blocks[${id}] not found!`)
+
+                const _style = window.getComputedStyle(drag)
+                console.debug( 'getComputedStyle(drag)', _style.width )
+
                 const xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                 const ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
+                
                 if (xpos >= b.x - (b.width / 2) - paddingx && xpos <= b.x + (b.width / 2) + paddingx && ypos >=b.y - (b.height / 2) && ypos <= b.y + b.height) {
                     return true;
-                } else {
-                    return false;
-                }
+                } 
+                
+                return false;
+                
             }
 
             const removeSelection = () => {
@@ -628,34 +634,45 @@ export class FlowyDiagram extends LitElement {
                     drag.classList.add("dragging");
                     
                     let blockid = this.#dragBlockValue().toInt();
-                    prevblock = blocks.filter(a => a.id == blockid)[0].parent;
-                    blockstemp.push(blocks.filter(a => a.id == blockid)[0]);
-                    blocks = blocks.filter(function (e) {
-                        return e.id != blockid
-                    });
+                    
+                    const _pb = blocks.find(a => a.id == blockid)!
+                    console.assert( _pb!==undefined, "prev block not found!" )
+
+                    prevblock = _pb.parent;
+                    
+                    blockstemp.push(_pb);
+                    
+                    blocks = blocks.filter(e => e.id != blockid)
+
                     if (blockid != 0) {
                         this.#arrowByValue(blockid).remove();
                     }
+
                     let layer = blocks.filter(a => a.parent == blockid);
+
                     let flag = false;
-                    let foundids = Array<number>();
-                    let allids = [];
+                    let foundids = Array<number>()
+                    let allids = Array<number>()
+                    
                     while (!flag) {
-                        for (let i = 0; i < layer.length; i++) {
-                            if (layer[i].id != blockid) {
-                                blockstemp.push(blocks.filter(a => a.id == layer[i].id)[0]);
-                                const blockParent = this.#blockByValue(layer[i].id)
-                                const arrowParent = this.#arrowByValue(layer[i].id)
-                                blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX) + "px";
-                                blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY) + "px";
-                                arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX) + "px";
-                                arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY) + "px";
-                                drag.appendChild(blockParent);
-                                drag.appendChild(arrowParent);
-                                foundids.push(layer[i].id);
-                                allids.push(layer[i].id);
-                            }
-                        }
+
+                        layer.filter( l => l.id != blockid ).map( l => l.id ).forEach( lid => {
+                            const _bb = blocks.find(a => a.id == lid )!
+                            console.assert( _bb!==undefined, `block[${lid}] not found!` )
+
+                            blockstemp.push( _bb );
+                            const blockParent = this.#blockByValue(lid)
+                            const arrowParent = this.#arrowByValue(lid)
+                            blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX) + "px";
+                            blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY) + "px";
+                            arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX) + "px";
+                            arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY) + "px";
+                            drag.appendChild(blockParent);
+                            drag.appendChild(arrowParent);
+                            foundids.push(lid)
+                            allids.push(lid)
+
+                        })
                         if (foundids.length == 0) {
                             flag = true;
                         } else {
@@ -663,50 +680,74 @@ export class FlowyDiagram extends LitElement {
                             foundids = [];
                         }
                     }
+
+
                     for (let i = 0; i < blocks.filter(a => a.parent == blockid).length; i++) {
+
                         let blocknumber = blocks.filter(a => a.parent == blockid)[i].id;
                         blocks = blocks.filter(e => e.id != blocknumber)
                     }
+
                     for (let i = 0; i < allids.length; i++) {
+
                         let blocknumber = allids[i];
                         blocks = blocks.filter(e => e.id != blocknumber)
                     }
+
                     if (blocks.length > 1) {
                         rearrangeMe();
                     }
+
                     dragblock = false;
                 }
+
                 if (active) {
+                    
                     drag.style.left = mouse_x - dragx + "px";
                     drag.style.top = mouse_y - dragy + "px";
+
                 } else if (rearrange) {
+                    
                     drag.style.left = mouse_x - dragx - (window.scrollX + absx) + canvas_div.scrollLeft + "px";
                     drag.style.top = mouse_y - dragy - (window.scrollY + absy) + canvas_div.scrollTop + "px";
                     const b = blockstemp.find(a => a.id == this.#dragBlockValue().toInt())!
                     b.x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
                     b.y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
                 }
+
                 if (active || rearrange) {
-                    if (mouse_x > canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left - 10 && mouse_x < canvas_div.getBoundingClientRect().width + canvas_div.getBoundingClientRect().left + 10) {
+                    
+                    const _rect = canvas_div.getBoundingClientRect()
+
+                    if (mouse_x > _rect.width + _rect.left - 10 && mouse_x < _rect.width + _rect.left + 10) {
                         canvas_div.scrollLeft += 10;
-                    } else if (mouse_x < canvas_div.getBoundingClientRect().left + 10 && mouse_x > canvas_div.getBoundingClientRect().left - 10) {
+                    } else if (mouse_x < _rect.left + 10 && mouse_x > _rect.left - 10) {
                         canvas_div.scrollLeft -= 10;
-                    } else if (mouse_y > canvas_div.getBoundingClientRect().height + canvas_div.getBoundingClientRect().top - 10 && mouse_y < canvas_div.getBoundingClientRect().height + canvas_div.getBoundingClientRect().top + 10) {
+                    } else if (mouse_y > _rect.height + _rect.top - 10 && mouse_y < _rect.height + _rect.top + 10) {
                         canvas_div.scrollTop += 10;
-                    } else if (mouse_y < canvas_div.getBoundingClientRect().top + 10 && mouse_y > canvas_div.getBoundingClientRect().top - 10) {
+                    } else if (mouse_y < _rect.top + 10 && mouse_y > _rect.top - 10) {
                         canvas_div.scrollLeft -= 10;
                     }
-                    let xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
-                    let ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
-                    let blocko = blocks.map(a => a.id);
+                    // let xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
+                    // let ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
+                    
+                    const blocko = blocks.map(a => a.id);
+
                     for (let i = 0; i < blocks.length; i++) {
+
                         if (checkAttach(blocko[i])) {
-                            this.#blockByValue(blocko[i]).appendChild(this._indicator);
-                            this._indicator.style.left = (this.#blockByValue(blocko[i]).offsetWidth / 2) - 5 + "px";
-                            this._indicator.style.top = this.#blockByValue(blocko[i]).offsetHeight + "px";
+                        
+                            const _b = this.#blockByValue(blocko[i])
+
+                            _b.appendChild(this._indicator);
+                            this._indicator.style.left = (_b.offsetWidth / 2) - 5 + "px";
+                            this._indicator.style.top = _b.offsetHeight + "px";
                             this._indicator.classList.remove("invisible");
+                        
                             break;
+                        
                         } else if (i == blocks.length - 1) {
+                        
                             if (!this._indicator.classList.contains("invisible")) {
                                 this._indicator.classList.add("invisible");
                             }
