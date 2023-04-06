@@ -291,9 +291,6 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
             function checkAttach(id) {
                 const b = blocks.find((a)=>a.id == id);
                 console.assert(b !== undefined, `blocks[${id}] not found!`);
-                const _style = window.getComputedStyle(drag);
-                const _rect = drag.getBoundingClientRect();
-                console.debug("drag.getBoundingClientRect()", _rect);
                 const xpos = drag.getBoundingClientRect().left + window.scrollX + parseInt(window.getComputedStyle(drag).width) / 2 + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                 const ypos = drag.getBoundingClientRect().top + window.scrollY + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top;
                 if (xpos >= b.x - b.width / 2 - paddingx && xpos <= b.x + b.width / 2 + paddingx && ypos >= b.y - b.height / 2 && ypos <= b.y + b.height) return true;
