@@ -92,13 +92,19 @@ export function createElement( params: addElementParameters  ) {
 export class FlowyElement extends LitElement {
 
     @property()
+    type: 'element' | 'template' | 'propertysheet' = 'element'
+
+    @property( { type: 'number' })
+    value?:number
+
+    @property()
     image_url?: URL
 
     @property()
-    title: string = ""
+    title: string = ''
 
     @property()
-    description: string = ""
+    description: string = ''
 
     constructor() {
         super();
@@ -115,19 +121,58 @@ export class FlowyElement extends LitElement {
     }
 
     protected render() {
-        return html`
-        <div class='blockyleft'>
-            <img src='${this.image_url}'>
-            <p class='blockyname'>${this.title}</p>
-        </div>
-        <div class='blockyright'>
-            <img src='${mode_img}'>
-        </div>
-        <div class='blockydiv'></div>
-        <div class='blockyinfo'>
-            <span>${unsafeHTML(this.description)}</span>
-        </div>
-        `    
+
+        const { type , value, image_url, title, description } = this    
+        
+        if( type == 'template' ) {
+
+            return html`
+            <div class="blockelem create-flowy noselect">
+                <input type="hidden" name="blockelemtype" class="blockelemtype" value="${value}">
+                <div class="grabme">
+                    <img src="${grabme_img}">
+                </div>
+                <div class="blockin">
+                    <div class="blockico">
+                        <span></span>
+                        <img src="${image_url}">
+                    </div>
+                    <div class="blocktext">
+                        <p class="blocktitle">${title}</p>
+                        <p class="blockdesc">${unsafeHTML(description)}</p>
+                    </div>
+                </div>
+            </div>
+            `
+
+        }
+
+        if( type == 'propertysheet') {
+
+            return html`
+                <div id="properties">
+                    <div id="close">
+                        <img src="${image_url}">
+                    </div>
+                    <p id="header2">Properties</p>
+                    <div id="propswitch">
+                        <div id="dataprop">Data</div>
+                        <div id="alertprop">Alerts</div>
+                        <div id="logsprop">Logs</div>
+                    </div>
+                    <div id="proplist">
+                        <p class="inputlabel">Select database</p>
+                        <div class="dropme">Database 1 <img src="assets/dropdown.svg"></div>
+                        <p class="inputlabel">Check properties</p>
+                        <div class="dropme">All<img src="assets/dropdown.svg"></div>
+                        <div class="checkus"><img src="assets/checkon.svg"><p>Log on successful performance</p></div>
+                        <div class="checkus"><img src="assets/checkoff.svg"><p>Give priority to this block</p></div>
+                    </div>
+                    <div id="divisionthing"></div>
+                    <div id="removeblock">Delete blocks</div>
+                </div>
+            `
+        }
     }
 
 }
