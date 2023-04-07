@@ -380,7 +380,7 @@ export class FlowyDiagram extends LitElement {
                 }
             }
 
-            function checkAttach(id: number) {
+            function checkAttach(id: number) { 
 
                 const b = blocks.find( a => a.id == id  )!
                 console.assert( b!==undefined, `blocks[${id}] not found!`)
