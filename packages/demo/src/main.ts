@@ -1,4 +1,5 @@
 import 'flowy-engine/dist/flowy.js' 
+import './element'
 import { createElement } from './element' 
 
 import type { FlowyDiagram } from 'flowy-engine'
@@ -144,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    const disabledClick = function (event:Event) {
+    const disabledClick =  (event:Event) => {
         const target = event.target as HTMLElement
 
         document.querySelector(".navactive")?.classList.add("navdisabled");

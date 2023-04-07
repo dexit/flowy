@@ -211,7 +211,7 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 const item = target.closest(".create-flowy");
                 if (event.which != 3 && item) {
                     original = item;
-                    let newNode = item.cloneNode(true);
+                    let newNode = item.cloneNode(false);
                     item.classList.add("dragnow");
                     newNode.classList.add("block");
                     newNode.classList.remove("create-flowy");

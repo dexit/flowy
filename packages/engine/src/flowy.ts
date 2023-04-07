@@ -281,7 +281,7 @@ export class FlowyDiagram extends LitElement {
                     
                     original = item
                     
-                    let newNode = item.cloneNode(true) as HTMLElement;
+                    let newNode = item.cloneNode(false) as HTMLElement;
 
                     item.classList.add("dragnow");
 

@@ -39,24 +39,19 @@ export function createElement( params: addElementParameters  ) {
     if( type == 'template' ) {
 
         return html`
+            <flowy-myelement class="blockelem create-flowy noselect" value="${value}" image_url="${image_url}" title="${title}" description="${description}" type="template"/>
+        `
+/*
+        return html`
         <div class="blockelem create-flowy noselect">
             <input type="hidden" name="blockelemtype" class="blockelemtype" value="${value}">
             <div class="grabme">
                 <img src="${grabme_img}">
             </div>
-            <div class="blockin">
-                <div class="blockico">
-                    <span></span>
-                    <img src="${image_url}">
-                </div>
-                <div class="blocktext">
-                    <p class="blocktitle">${title}</p>
-                    <p class="blockdesc">${unsafeHTML(description)}</p>
-                </div>
-            </div>
-        </div>
+            <flowy-myelement value="${value}" image_url="${image_url}" title="${title}" description="${description}" type="template"/>
+        </div>    
         `
-
+*/
     }
 
     if( type == 'propertysheet') {
@@ -125,13 +120,14 @@ export class FlowyElement extends LitElement {
         const { type , value, image_url, title, description } = this    
         
         if( type == 'template' ) {
-
+            console.debug( 'render' )
             return html`
-            <div class="blockelem create-flowy noselect">
+            <div>
                 <input type="hidden" name="blockelemtype" class="blockelemtype" value="${value}">
                 <div class="grabme">
                     <img src="${grabme_img}">
                 </div>
+
                 <div class="blockin">
                     <div class="blockico">
                         <span></span>
@@ -144,7 +140,6 @@ export class FlowyElement extends LitElement {
                 </div>
             </div>
             `
-
         }
 
         if( type == 'propertysheet') {
