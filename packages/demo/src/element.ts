@@ -22,6 +22,11 @@ export function createElement( params: addElementParameters  ) {
     if( type == 'element') {
 
         return html`
+            <flowy-myelement class="blockelem create-flowy noselect" value="${value}" image_url="${image_url}" title="${title}" description="${description}" type="element"/>
+        `
+
+/*        
+        return html`
         <div>
             <div class='blockyleft'>
                 <img src='${image_url}'>
@@ -34,6 +39,7 @@ export function createElement( params: addElementParameters  ) {
             <div class='blockyinfo'>${unsafeHTML(description)}</div>
         </div>
         `
+*/
     }
 
     if( type == 'template' ) {
@@ -119,6 +125,22 @@ export class FlowyElement extends LitElement {
 
         const { type , value, image_url, title, description } = this    
         
+        if( type == 'element') {
+            return html`
+            <div>
+                <div class='blockyleft'>
+                    <img src='${image_url}'>
+                        <p class='blockyname'>${title}</p>
+                </div>
+                <div class='blockyright'>
+                    <img src='${mode_img}'>
+                </div>
+                <div class='blockydiv'></div>
+                <div class='blockyinfo'>${unsafeHTML(description)}</div>
+            </div>
+            `
+    
+        }
         if( type == 'template' ) {
             console.debug( 'render' )
             return html`
