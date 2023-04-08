@@ -25,6 +25,7 @@ export interface Output {
     blocks: Array<any>;
 }
 export const createOrUpdateArrow: (id: string | HTMLElement, x: number, y: number, paddingy?: number, start_x?: number) => HTMLElement;
+type AddBlockArgs = Omit<Block, 'height' | 'width'> & Partial<Block>;
 export class FlowyDiagram extends LitElement {
     #private;
     _canvas: HTMLCanvasElement;
@@ -41,7 +42,7 @@ export class FlowyDiagram extends LitElement {
     beginDrag: (event: any) => void;
     endDrag: (event: any) => void;
     moveBlock: (event: any) => void;
-    addBlock: (block?: Omit<Block, 'height'> & Partial<Pick<Block, 'height'>>) => void;
+    addBlock: (block?: AddBlockArgs) => void;
     /**
      * disable shadow root
      *

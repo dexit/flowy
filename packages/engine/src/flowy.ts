@@ -74,6 +74,9 @@ function hasParentClass(element: HTMLElement, classname: string): boolean {
     return (element.parentNode !== null) && hasParentClass(element.parentNode as HTMLElement, classname);
 }
 
+//type AddBlockArgs = Omit<Block, 'height'|'width'> & Partial<Pick<Block, 'height'|'width'>>
+type AddBlockArgs = Omit<Block, 'height'|'width'> & Partial<Block>
+
 @customElement('flowy-diagram')
 export class FlowyDiagram extends LitElement {
 
@@ -117,7 +120,7 @@ export class FlowyDiagram extends LitElement {
     beginDrag!: (event: any) => void
     endDrag!: (event: any) => void
     moveBlock!: (event: any) => void
-    addBlock!:( block?:Omit<Block, 'height'> & Partial<Pick<Block, 'height'>> ) => void
+    addBlock!:( block?:AddBlockArgs ) => void
 
     #dragBlockValue!: () => { value: string, toInt: () => number }
 
@@ -187,19 +190,16 @@ export class FlowyDiagram extends LitElement {
                 }
             }
 
-            this.addBlock = ( block?:Omit<Block, 'height'> & Partial<Pick<Block, 'height'>> ) => {
-
-                let { height, width } = window.getComputedStyle(drag)
-
-                console.debug( drag, `addBlock`, `width: ${width}`, `height: ${height}`)
-
-                height = '161px' // style.height
+            this.addBlock = ( block?:AddBlockArgs ) => {
+            
+                const { height, width } = window.getComputedStyle(drag)
 
                 if( block ) {
 
                     blocks.push({
+                        width: parseInt(width),
+                        height: parseInt(height),
                         ...block,
-                        height: block.height ?? parseInt(height)
                     })
 
                 }
@@ -312,7 +312,7 @@ export class FlowyDiagram extends LitElement {
                     
                     original = item
 
-                    let newNode = item.cloneNode(false) as HTMLElement;
+                    let newNode = item.cloneNode(true) as HTMLElement;
 
                     item.classList.add("dragnow");
                     newNode.classList.add("block");
@@ -575,7 +575,7 @@ export class FlowyDiagram extends LitElement {
                         id: this.#dragBlockValue().toInt(),
                         x: (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left,
                         y: (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top,
-                        width: parseInt(window.getComputedStyle(drag).width),
+                        // width: parseInt(window.getComputedStyle(drag).width),
                         // height: parseInt(window.getComputedStyle(drag).height)
                     })
                 }

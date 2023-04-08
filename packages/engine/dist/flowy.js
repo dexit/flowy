@@ -135,13 +135,11 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 };
             }, "f");
             this.addBlock = (block)=>{
-                var _a;
-                let { height: height , width: width  } = window.getComputedStyle(drag);
-                console.debug(drag, `addBlock`, `width: ${width}`, `height: ${height}`);
-                height = "161px"; // style.height
-                if (block) blocks.push(Object.assign(Object.assign({}, block), {
-                    height: (_a = block.height) !== null && _a !== void 0 ? _a : parseInt(height)
-                }));
+                const { height: height , width: width  } = window.getComputedStyle(drag);
+                if (block) blocks.push(Object.assign({
+                    width: parseInt(width),
+                    height: parseInt(height)
+                }, block));
                 else {
                     const drag_rect = drag.getBoundingClientRect();
                     const canvas_rect = canvas_div.getBoundingClientRect();
@@ -226,8 +224,7 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 const is_right_click = event instanceof MouseEvent && event.button == 2 /* right click */ ;
                 if (item && !is_right_click) {
                     original = item;
-                    // let newNode = item.cloneNode(false) as HTMLElement;
-                    let newNode = document.createElement("div");
+                    let newNode = item.cloneNode(true);
                     item.classList.add("dragnow");
                     newNode.classList.add("block");
                     newNode.classList.remove("create-flowy");
@@ -251,7 +248,8 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 }
             };
             this.endDrag = (event)=>{
-                if (event.which != 3 && (active || rearrange)) {
+                const is_right_click = event instanceof MouseEvent && event.button == 2 /* right click */ ;
+                if (!is_right_click && (active || rearrange)) {
                     dragblock = false;
                     blockReleased();
                     if (!this._indicator.classList.contains("invisible")) this._indicator.classList.add("invisible");
@@ -422,8 +420,7 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     parent: blocko[i],
                     id: $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt(),
                     x: drag.getBoundingClientRect().left + window.scrollX + parseInt(window.getComputedStyle(drag).width) / 2 + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left,
-                    y: drag.getBoundingClientRect().top + window.scrollY + parseInt(window.getComputedStyle(drag).height) / 2 + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top,
-                    width: parseInt(window.getComputedStyle(drag).width)
+                    y: drag.getBoundingClientRect().top + window.scrollY + parseInt(window.getComputedStyle(drag).height) / 2 + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top
                 });
                 let arrowblock = blocks.filter((a)=>a.id == $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt())[0];
                 let arrowx = arrowblock.x - blocks.filter((a)=>a.id == blocko[i])[0].x + 20;

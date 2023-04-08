@@ -101,14 +101,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function snapping(drag:HTMLElement, first:boolean) {
-        const grab = drag.querySelector(".grabme") as HTMLElement
-        grab.parentElement?.removeChild(grab);
+        const grab = drag.querySelector(".grabme") 
+        grab?.parentElement?.removeChild(grab);
         const blockin = drag.querySelector(".blockin");
         blockin?.parentElement?.removeChild(blockin);
 
         const value = (drag.querySelector(".blockelemtype") as HTMLDataElement).value
         if (value == "1") {
-            console.log( 'eyeblue_img', eyeblue_img );
             addElement(drag, eyeblue_img, 'New visitor', 'When a <span>new visitor</span> goes to <span>Site 1</span>')
         } else if (value == "2") {
             addElement(drag, actionblue_img, 'Action is performed', 'When <span>Action 1</span> is performed')
