@@ -41,6 +41,7 @@ export class FlowyDiagram extends LitElement {
     beginDrag: (event: any) => void;
     endDrag: (event: any) => void;
     moveBlock: (event: any) => void;
+    addBlock: (block?: Omit<Block, 'height'> & Partial<Pick<Block, 'height'>>) => void;
     /**
      * disable shadow root
      *

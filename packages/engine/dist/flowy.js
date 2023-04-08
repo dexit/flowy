@@ -134,17 +134,31 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     toInt: ()=>parseInt(value)
                 };
             }, "f");
+            this.addBlock = (block)=>{
+                var _a;
+                let { height: height , width: width  } = window.getComputedStyle(drag);
+                console.debug(drag, `addBlock`, `width: ${width}`, `height: ${height}`);
+                height = "161px"; // style.height
+                if (block) blocks.push(Object.assign(Object.assign({}, block), {
+                    height: (_a = block.height) !== null && _a !== void 0 ? _a : parseInt(height)
+                }));
+                else {
+                    const drag_rect = drag.getBoundingClientRect();
+                    const canvas_rect = canvas_div.getBoundingClientRect();
+                    blocks.push({
+                        parent: -1,
+                        childwidth: 0,
+                        id: $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt(),
+                        x: drag_rect.left + window.scrollX + parseInt(width) / 2 + canvas_div.scrollLeft - canvas_rect.left,
+                        y: drag_rect.top + window.scrollY + parseInt(height) / 2 + canvas_div.scrollTop - canvas_rect.top,
+                        width: parseInt(width),
+                        height: parseInt(height)
+                    });
+                }
+            };
             this.import = (output)=>{
                 canvas_div.innerHTML = output.html;
-                for(let a = 0; a < output.blockarr.length; a++)blocks.push({
-                    childwidth: parseFloat(output.blockarr[a].childwidth.toString()),
-                    parent: parseFloat(output.blockarr[a].parent.toString()),
-                    id: parseFloat(output.blockarr[a].id.toString()),
-                    x: parseFloat(output.blockarr[a].x.toString()),
-                    y: parseFloat(output.blockarr[a].y.toString()),
-                    width: parseFloat(output.blockarr[a].width.toString()),
-                    height: parseFloat(output.blockarr[a].height.toString())
-                });
+                for(let a = 0; a < output.blockarr.length; a++)this.addBlock(output.blockarr[a]);
                 if (blocks.length > 1) {
                     rearrangeMe();
                     checkOffset();
@@ -192,14 +206,13 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 canvas_div.innerHTML = "<div class='indicator invisible'></div>";
             };
             this.beginDrag = (event)=>{
-                const target = event.target;
                 const { position: position  } = window.getComputedStyle(canvas_div);
                 if (position == "absolute" || position == "fixed") {
                     const { left: left , top: top  } = canvas_div.getBoundingClientRect();
                     absx = left;
                     absy = top;
                 }
-                if (event.targetTouches) {
+                if ("targetTouches" in event && event.targetTouches) {
                     const { clientX: clientX , clientY: clientY  } = event.changedTouches[0];
                     mouse_x = clientX;
                     mouse_y = clientY;
@@ -208,10 +221,13 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     mouse_x = clientX;
                     mouse_y = clientY;
                 }
+                const target = event.target;
                 const item = target.closest(".create-flowy");
-                if (event.which != 3 && item) {
+                const is_right_click = event instanceof MouseEvent && event.button == 2 /* right click */ ;
+                if (item && !is_right_click) {
                     original = item;
-                    let newNode = item.cloneNode(false);
+                    // let newNode = item.cloneNode(false) as HTMLElement;
+                    let newNode = document.createElement("div");
                     item.classList.add("dragnow");
                     newNode.classList.add("block");
                     newNode.classList.remove("create-flowy");
@@ -308,15 +324,7 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     drag.style.top = drag.getBoundingClientRect().top + window.scrollY - (absy + window.scrollY) + canvas_div.scrollTop + "px";
                     drag.style.left = drag.getBoundingClientRect().left + window.scrollX - (absx + window.scrollX) + canvas_div.scrollLeft + "px";
                     canvas_div.appendChild(drag);
-                    blocks.push({
-                        parent: -1,
-                        childwidth: 0,
-                        id: $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt(),
-                        x: drag.getBoundingClientRect().left + window.scrollX + parseInt(window.getComputedStyle(drag).width) / 2 + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left,
-                        y: drag.getBoundingClientRect().top + window.scrollY + parseInt(window.getComputedStyle(drag).height) / 2 + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top,
-                        width: parseInt(window.getComputedStyle(drag).width),
-                        height: parseInt(window.getComputedStyle(drag).height)
-                    });
+                    this.addBlock();
                 } else if (type == "rearrange") {
                     drag.classList.remove("dragging");
                     rearrange = false;
@@ -409,14 +417,13 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                     }
                     blocks = blocks.concat(blockstemp);
                     blockstemp = [];
-                } else blocks.push({
+                } else this.addBlock({
                     childwidth: 0,
                     parent: blocko[i],
                     id: $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt(),
                     x: drag.getBoundingClientRect().left + window.scrollX + parseInt(window.getComputedStyle(drag).width) / 2 + canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left,
                     y: drag.getBoundingClientRect().top + window.scrollY + parseInt(window.getComputedStyle(drag).height) / 2 + canvas_div.scrollTop - canvas_div.getBoundingClientRect().top,
-                    width: parseInt(window.getComputedStyle(drag).width),
-                    height: parseInt(window.getComputedStyle(drag).height)
+                    width: parseInt(window.getComputedStyle(drag).width)
                 });
                 let arrowblock = blocks.filter((a)=>a.id == $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_dragBlockValue, "f").call(this).toInt())[0];
                 let arrowx = arrowblock.x - blocks.filter((a)=>a.id == blocko[i])[0].x + 20;
