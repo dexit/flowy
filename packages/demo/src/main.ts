@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
             menuElement( 1, eye_img, 'New visitor', 'Triggers when somebody visits a specified page'),
             menuElement( 2, action_img, 'Action is performed', 'Triggers when somebody performs a specified action'),
             menuElement( 3, time_img, 'Time has passed', 'Triggers after a specified amount of time'),
-            menuElement(4, error_img, 'Error prompt', 'Triggers when a specified error happens'),
+            menuElement( 4, error_img, 'Error prompt', 'Triggers when a specified error happens'),
         ],
         [
             menuElement(5, database_img, 'New database entry', 'Adds a new entry to a specified database'),

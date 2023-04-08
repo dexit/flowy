@@ -8,7 +8,6 @@ function $parcel$export(e, n, v, s) {
 }
 var $7712d7abb20ba789$exports = {};
 
-$parcel$export($7712d7abb20ba789$exports, "createOrUpdateArrow", function () { return $7712d7abb20ba789$export$132f54fcf658b73a; }, function (v) { return $7712d7abb20ba789$export$132f54fcf658b73a = v; });
 $parcel$export($7712d7abb20ba789$exports, "FlowyDiagram", function () { return $7712d7abb20ba789$export$ed9fc9039e390ef3; }, function (v) { return $7712d7abb20ba789$export$ed9fc9039e390ef3 = v; });
 
 
@@ -36,7 +35,7 @@ function $7712d7abb20ba789$var$toInt(value) {
     if (typeof value === "number") return parseInt(`${value}`);
     else return parseInt(value);
 }
-const $7712d7abb20ba789$export$132f54fcf658b73a = (id, x, y, paddingy = 80, start_x = 20)=>{
+const $7712d7abb20ba789$var$createOrUpdateArrow = (id, x, y, paddingy = 80, start_x = 20)=>{
     let arrow;
     if (typeof id === "string") {
         arrow = document.createElement("div");
@@ -350,11 +349,11 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 const adjustment = absx + window.scrollX - canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left;
                 let el;
                 if (x < 0) {
-                    el = $7712d7abb20ba789$export$132f54fcf658b73a(_bid_val, 5, y, paddingy, _blk.x - arrow.x + 5);
+                    el = $7712d7abb20ba789$var$createOrUpdateArrow(_bid_val, 5, y, paddingy, _blk.x - arrow.x + 5);
                     canvas_div.appendChild(el);
                     el.style.left = `${arrow.x - 5 - adjustment}px`;
                 } else {
-                    el = $7712d7abb20ba789$export$132f54fcf658b73a(_bid_val, x, y, paddingy);
+                    el = $7712d7abb20ba789$var$createOrUpdateArrow(_bid_val, x, y, paddingy);
                     canvas_div.appendChild(el);
                     el.style.left = `${_blk.x - 20 - adjustment}px`;
                 }
@@ -365,10 +364,10 @@ let $7712d7abb20ba789$export$ed9fc9039e390ef3 = class FlowyDiagram extends (0, $
                 const el = $7712d7abb20ba789$var$__classPrivateFieldGet(this, $7712d7abb20ba789$var$_FlowyDiagram_instances, "m", $7712d7abb20ba789$var$_FlowyDiagram_arrowByValue).call(this, children.id);
                 const adjustment = absx + window.scrollX - canvas_div.getBoundingClientRect().left;
                 if (x < 0) {
-                    $7712d7abb20ba789$export$132f54fcf658b73a(el, 5, y, paddingy, _blk.x - arrow.x + 5);
+                    $7712d7abb20ba789$var$createOrUpdateArrow(el, 5, y, paddingy, _blk.x - arrow.x + 5);
                     el.style.left = `${arrow.x - 5 - adjustment}px`;
                 } else {
-                    $7712d7abb20ba789$export$132f54fcf658b73a(el, x, y, paddingy);
+                    $7712d7abb20ba789$var$createOrUpdateArrow(el, x, y, paddingy);
                     el.style.left = `${_blk.x - 20 - adjustment}px`;
                 }
             };
@@ -684,4 +683,4 @@ $7712d7abb20ba789$export$ed9fc9039e390ef3 = $7712d7abb20ba789$var$__decorate([
 ], $7712d7abb20ba789$export$ed9fc9039e390ef3);
 
 
-export {$7712d7abb20ba789$export$132f54fcf658b73a as createOrUpdateArrow, $7712d7abb20ba789$export$ed9fc9039e390ef3 as FlowyDiagram, $7712d7abb20ba789$exports as default};
+export {$7712d7abb20ba789$export$ed9fc9039e390ef3 as FlowyDiagram, $7712d7abb20ba789$exports as default};

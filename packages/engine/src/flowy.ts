@@ -39,7 +39,8 @@ function toInt(value: number | string) {
         return parseInt(value)
 }
 
-export const createOrUpdateArrow = ( id:string|HTMLElement, x:number, y:number, paddingy:number = 80, start_x = 20 ): HTMLElement => {
+
+const createOrUpdateArrow = ( id:string|HTMLElement, x:number, y:number, paddingy:number = 80, start_x = 20 ): HTMLElement => {
 
     let arrow:HTMLElement
     if( typeof(id) === 'string') {
@@ -65,8 +66,6 @@ export const createOrUpdateArrow = ( id:string|HTMLElement, x:number, y:number, 
     return arrow
 }
 
-
-
 function hasParentClass(element: HTMLElement, classname: string): boolean {
     if (element.className) {
         if (element.className.split(' ').indexOf(classname) >= 0) return true;
@@ -74,7 +73,6 @@ function hasParentClass(element: HTMLElement, classname: string): boolean {
     return (element.parentNode !== null) && hasParentClass(element.parentNode as HTMLElement, classname);
 }
 
-//type AddBlockArgs = Omit<Block, 'height'|'width'> & Partial<Pick<Block, 'height'|'width'>>
 type AddBlockArgs = Omit<Block, 'height'|'width'> & Partial<Block>
 
 @customElement('flowy-diagram')

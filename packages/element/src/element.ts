@@ -2,6 +2,7 @@ import {LitElement, html, render} from 'lit';
 import {query} from 'lit/decorators/query.js';
 import {customElement, property} from 'lit/decorators.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
+import type { SnappingHandler, FlowyDiagram } from 'flowy-engine'
 
 const mode_img = new URL('../assets/more.svg', import.meta.url)
 const grabme_img = new URL('../assets/grabme.svg', import.meta.url)
@@ -14,7 +15,22 @@ type addElementParameters = {
     type: 'element' | 'template' | 'propertysheet'
 }
 
-export function createElement( params: addElementParameters  ) {
+export interface ElementMetaData {
+
+    addElement: ( target:HTMLElement, template:HTMLElement ) => void
+
+    addTemplates: ( target:HTMLElement ) => void
+
+    addTimeSheet: (  target:HTMLElement, template:HTMLElement ) => void
+
+    snapping: SnappingHandler
+}
+
+export function getElementMetaData( diagram:FlowyDiagram ): Partial<ElementMetaData> {
+    return {}
+}
+
+export function createElement( params: addElementParameters )  {
 
     const { image_url, type, title, description, value = 0 } = params 
 

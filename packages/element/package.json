@@ -28,6 +28,7 @@
     "url": "https://github.com/bsorrentino/flowy/issues"
   },
   "dependencies": {
+    "flowy-engine": "*",
     "lit": "^2.7.0",
     "lit-html": "^2.7.0"
   },

@@ -24,7 +24,6 @@ export interface Output {
     blockarr: Array<Block>;
     blocks: Array<any>;
 }
-export const createOrUpdateArrow: (id: string | HTMLElement, x: number, y: number, paddingy?: number, start_x?: number) => HTMLElement;
 type AddBlockArgs = Omit<Block, 'height' | 'width'> & Partial<Block>;
 export class FlowyDiagram extends LitElement {
     #private;
