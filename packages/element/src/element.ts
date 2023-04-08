@@ -3,7 +3,6 @@ import {query} from 'lit/decorators/query.js';
 import {customElement, property} from 'lit/decorators.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 
-
 const mode_img = new URL('../assets/more.svg', import.meta.url)
 const grabme_img = new URL('../assets/grabme.svg', import.meta.url)
 

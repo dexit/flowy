@@ -1,6 +1,5 @@
 import 'flowy-engine/dist/flowy.js' 
-import './element'
-import { createElement } from './element' 
+import { createElement } from 'flowy-element' 
 
 import type { FlowyDiagram } from 'flowy-engine'
 import { html, render } from 'lit-html'

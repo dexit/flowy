@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "flowy-engine": "*",
+    "flowy-element": "*",
     "lit": "^2.7.0"
   },
   "keywords": [],
