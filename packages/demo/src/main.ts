@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.debug( `block selected! ${e.detail.id}`)
 
-        element.addPopertiesSheet( flowy, properties_container, e.detail  )
+        element.addPopertiesSheet( properties_container, e.detail  )
 
         properties_container.querySelector("#properties")?.classList.add("expanded")
         properties_container.classList.add("itson");

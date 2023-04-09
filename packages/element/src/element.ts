@@ -31,7 +31,7 @@ export interface ElementMetaData {
 
     addTemplates: ( target:HTMLElement ) => void
 
-    addPopertiesSheet: (  diagram:FlowyDiagram, target:HTMLElement, element:HTMLElement ) => void
+    addPopertiesSheet: ( target:HTMLElement, element:HTMLElement ) => void
 
 }
 
@@ -53,7 +53,7 @@ export function getElementMetaData( diagram:FlowyDiagram ): ElementMetaData {
 
         addTemplates: _addTemplates,
 
-        addPopertiesSheet: _addPropertiesSheet,
+        addPopertiesSheet: (target:HTMLElement, element:HTMLElement) => _addPropertiesSheet( diagram, target, element),
 
     }
 }
