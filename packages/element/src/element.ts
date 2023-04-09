@@ -99,7 +99,7 @@ const addElement = ( diagram:FlowyDiagram, target:HTMLElement ) => {
         case "10":
             _addElement( diagram, target, logred_img, 'Update logs', 'Edit <span>Log Entry 1</span>');
             break
-        case "5":
+        case "11":
             _addElement( diagram, target, errorred_img, 'Prompt an error', 'Trigger <span>Error 1</span>');
             break
         default:
