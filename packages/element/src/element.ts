@@ -1,8 +1,8 @@
-import {LitElement, html, render} from 'lit';
-import {query} from 'lit/decorators/query.js';
-import {customElement, property} from 'lit/decorators.js';
+import {html, render} from 'lit-html';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
-import type { SnappingHandler, FlowyDiagram } from 'flowy-engine'
+import type { FlowyDiagram } from 'flowy-engine'
+
+import './element.css'
 
 const mode_img = new URL('../assets/more.svg', import.meta.url)
 const grabme_img = new URL('../assets/grabme.svg', import.meta.url)
@@ -27,78 +27,98 @@ const dropdown_img = new URL('../assets/dropdown.svg', import.meta.url)
 const checkon_img = new URL('../assets/checkon.svg', import.meta.url)
 const checkoff_img = new URL('../assets/checkoff.svg', import.meta.url)
 
-
 export interface ElementMetaData {
-
-    addElement: ( target:HTMLElement ) => boolean
 
     addTemplates: ( target:HTMLElement ) => void
 
-    addTimeSheet: (  target:HTMLElement, element?:HTMLElement ) => void
+    addPopertiesSheet: (  diagram:FlowyDiagram, target:HTMLElement, element:HTMLElement ) => void
 
 }
 
 export function getElementMetaData( diagram:FlowyDiagram ): ElementMetaData {
+
+    const blockGrabbed = (block: HTMLElement) =>
+        block.classList.add('blockdisabled');
+
+    const blockReleased = (block: HTMLElement) => 
+        block.classList.remove("blockdisabled")
+
+    diagram.addEventListener( 'blockGrabbed', ((event:CustomEvent<HTMLElement> ) => blockGrabbed(event.detail) ) as EventListener, false )
+    
+    diagram.addEventListener( 'blockReleased', ((event:CustomEvent<HTMLElement> ) => blockReleased(event.detail)) as EventListener, false)
+
+    diagram.registerSnapping( ( drag, _ ) => addElement( diagram, drag ) )
+
     return {
-
-        addElement: ( target:HTMLElement ) => {
-
-            const grab = target.querySelector(".grabme") 
-            grab?.parentElement?.removeChild(grab);
-            const blockin = target.querySelector(".blockin");
-            blockin?.parentElement?.removeChild(blockin);
-    
-            const value = (target.querySelector(".blockelemtype") as HTMLDataElement).value
-
-            switch( value ) {
-                case "1":
-                    _addElement(target, eyeblue_img, 'New visitor', 'When a <span>new visitor</span> goes to <span>Site 1</span>')
-                    break
-                case "2" :
-                    _addElement(target, actionblue_img, 'Action is performed', 'When <span>Action 1</span> is performed')
-                    break
-                case "3":
-                    _addElement(target, timeblue_img, 'Time has passed', 'When <span>10 seconds</span> have passed</div>')
-                    break
-                case "4":
-                    _addElement(target, errorblue_img, 'Error prompt', 'When <span>Error 1</span> is triggered</div>')
-                    break
-                case "5":
-                    _addElement(target, databaseorange_img, 'New database entry', 'Add <span>Data object</span> to <span>Database 1</span>');
-                    break
-                case "6":
-                    _addElement(target, databaseorange_img, 'Update database', 'Update <span>Database 1</span>');
-                    break
-                case "7":
-                    _addElement(target, actionorange_img, 'Perform an action', 'Perform <span>Action 1</span>');
-                    break
-                case "8":
-                    _addElement(target, twitterorange_img, 'Make a tweet', 'Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span>');
-                    break
-                case "9":
-                    _addElement(target, logred_img, 'Add new log entry', 'Add new <span>success</span> log entry');
-                    break
-                case "10":
-                    _addElement(target, logred_img, 'Update logs', 'Edit <span>Log Entry 1</span>');
-                    break
-                case "5":
-                    _addElement(target, errorred_img, 'Prompt an error', 'Trigger <span>Error 1</span>');
-                    break
-                default:
-                    return false
-            }
-    
-            return true;
-        },
 
         addTemplates: _addTemplates,
 
-        addTimeSheet: _addTimeSheet,
+        addPopertiesSheet: _addPropertiesSheet,
 
     }
 }
 
-const _addElement = ( target:HTMLElement, image_url:URL, title:string, description:string ) =>  {
+
+const addElement = ( diagram:FlowyDiagram, target:HTMLElement ) => {
+
+    const grab = target.querySelector(".grabme") 
+    grab?.parentElement?.removeChild(grab);
+    const blockin = target.querySelector(".blockin");
+    blockin?.parentElement?.removeChild(blockin);
+
+    const value = (target.querySelector(".blockelemtype") as HTMLDataElement).value
+
+    switch( value ) {
+        case "1":
+            _addElement( diagram, target, eyeblue_img, 'New visitor', 'When a <span>new visitor</span> goes to <span>Site 1</span>')
+            break
+        case "2" :
+            _addElement( diagram, target, actionblue_img, 'Action is performed', 'When <span>Action 1</span> is performed')
+            break
+        case "3":
+            _addElement( diagram, target, timeblue_img, 'Time has passed', 'When <span>10 seconds</span> have passed</div>')
+            break
+        case "4":
+            _addElement( diagram, target, errorblue_img, 'Error prompt', 'When <span>Error 1</span> is triggered</div>')
+            break
+        case "5":
+            _addElement( diagram, target, databaseorange_img, 'New database entry', 'Add <span>Data object</span> to <span>Database 1</span>');
+            break
+        case "6":
+            _addElement( diagram, target, databaseorange_img, 'Update database', 'Update <span>Database 1</span>');
+            break
+        case "7":
+            _addElement( diagram, target, actionorange_img, 'Perform an action', 'Perform <span>Action 1</span>');
+            break
+        case "8":
+            _addElement( diagram, target, twitterorange_img, 'Make a tweet', 'Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span>');
+            break
+        case "9":
+            _addElement( diagram, target, logred_img, 'Add new log entry', 'Add new <span>success</span> log entry');
+            break
+        case "10":
+            _addElement( diagram, target, logred_img, 'Update logs', 'Edit <span>Log Entry 1</span>');
+            break
+        case "5":
+            _addElement( diagram, target, errorred_img, 'Prompt an error', 'Trigger <span>Error 1</span>');
+            break
+        default:
+            return false
+    }
+
+    return true;
+}
+
+const _addElement = ( diagram:FlowyDiagram, target:HTMLElement, image_url:URL, title:string, description:string ) =>  {
+    
+    target.addEventListener("click", () => {
+
+        const event = new CustomEvent<HTMLElement>('blockSelected', {
+            detail: target
+        })
+        diagram.dispatchEvent(event)
+
+    })
     
     const content = 
         html`
@@ -125,7 +145,6 @@ const  createTemplate = ( value:number, image_url:URL, title:string, description
         <div class="grabme">
             <img src="${grabme_img}">
         </div>
-
         <div class="blockin">
             <div class="blockico">
                 <span></span>
@@ -161,11 +180,19 @@ const _addTemplates =  ( target:HTMLElement ) => {
         
 } 
 
-const _addTimeSheet = (  target:HTMLElement, element?:HTMLElement ) => {
+const _addPropertiesSheet = ( diagram:FlowyDiagram, target:HTMLElement, element:HTMLElement ) => {
 
+    const closed = (e:UIEvent) => {
+
+        const event = new CustomEvent<HTMLElement>('sheetClosed', {
+            detail: element
+        })
+        diagram.dispatchEvent(event)
+
+    }
     const content =  html`
     <div id="properties">
-        <div id="close">
+        <div id="close" @click="${closed}">
             <img src="${close_img}">
         </div>
         <p id="header2">Properties</p>
@@ -183,7 +210,7 @@ const _addTimeSheet = (  target:HTMLElement, element?:HTMLElement ) => {
             <div class="checkus"><img src="${checkoff_img}"><p>Give priority to this block</p></div>
         </div>
         <div id="divisionthing"></div>
-        <div id="removeblock">Delete blocks</div>
+        <div id="removeblock" @click="${() => diagram.deleteBlocks()}">Delete blocks</div>
     </div>
     `
     render( content, target )

@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const flowy = document.getElementById('flowy') as FlowyDiagram
 
-    flowy.addEventListener( 'grab', (event:any) => drag(event.detail), false)
-    flowy.addEventListener( 'release', () => release(), false)
+    flowy.addEventListener( 'blockGrabbed', (event:any) => drag(event.detail), false)
+    flowy.addEventListener( 'blockReleased', () => release(), false)
 
     flowy.registerSnapping( snapping )
 

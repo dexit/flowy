@@ -355,7 +355,7 @@ export class FlowyDiagram extends LitElement {
 
                     dragblock = false;
 
-                    blockReleased();
+                    blockReleased( original );
                     
                     if (!this._indicator.classList.contains("invisible")) {
                         this._indicator.classList.add("invisible");
@@ -877,14 +877,16 @@ export class FlowyDiagram extends LitElement {
         }
 
         const blockGrabbed = (block: HTMLElement) => {
-            const event = new CustomEvent<HTMLElement>('grab', {
+            const event = new CustomEvent<HTMLElement>('blockGrabbed', {
                 detail: block
             })
             this.dispatchEvent(event)
         }
 
-        const blockReleased = () => {
-            const event = new CustomEvent<void>('release')
+        const blockReleased = ( block: HTMLElement ) => {
+            const event = new CustomEvent<HTMLElement>('blockReleased', {
+                detail: block
+            })
             this.dispatchEvent(event)
         }
 

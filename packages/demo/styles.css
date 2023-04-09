@@ -356,10 +356,6 @@ body, html {
     font-size: 14px;
     line-height: 21px;
 }
-.blockdisabled {
-    background-color: #F0F2F9;
-    opacity: .5;
-}
 #closecard {
     position: absolute;
     margin-left: 340px;
