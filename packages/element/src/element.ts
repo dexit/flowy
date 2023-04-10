@@ -28,35 +28,37 @@ const checkon_img = new URL('../assets/checkon.svg', import.meta.url)
 const checkoff_img = new URL('../assets/checkoff.svg', import.meta.url)
 
 
-export interface ElementMetaData {
+export function initElement( diagram:FlowyDiagram, templates_container:HTMLElement, properties_container:HTMLElement ) {
 
-    addTemplates: ( target:HTMLElement ) => void
-
-    addPopertiesSheet: ( target:HTMLElement, element:HTMLElement ) => void
-
-}
-
-export function getElementMetaData( diagram:FlowyDiagram ): ElementMetaData {
-
-    const templateGrabbed = (block: HTMLElement) =>
-        block.classList.add('blockdisabled')
-
-    const templateReleased = (block: HTMLElement) => 
-        block.classList.remove("blockdisabled")
-
-    diagram.addEventListener( 'templateGrabbed', (e) =>  templateGrabbed(e.detail ), false )
+    diagram.addEventListener( 'templateGrabbed', (e) =>  {
+        e.detail.classList.add('blockdisabled')
+    }, false )
     
-    diagram.addEventListener( 'templateReleased', (e) => templateReleased(e.detail) , false)
+    diagram.addEventListener( 'templateReleased', (e) => { 
+        e.detail.classList.remove("blockdisabled") 
+    }, false)
+
+    diagram.addEventListener( 'sheetClosed', (e) =>  {
+        e.detail.classList.remove("selectedblock")
+
+        properties_container.querySelector("#properties")?.classList.remove("expanded")
+    }, true )
+
+    diagram.addEventListener( 'blockSelected', (e) => {
+
+        e.detail.classList.add("selectedblock")
+
+        _addPropertiesSheet( diagram, properties_container, e.detail  )
+
+        properties_container.querySelector("#properties")?.classList.add("expanded")
+
+    }, false )
 
     diagram.registerSnapping( ( drag, _ ) => addElement( diagram, drag ) )
 
-    return {
+    _addTemplates( templates_container )
 
-        addTemplates: _addTemplates,
 
-        addPopertiesSheet: (target:HTMLElement, element:HTMLElement) => _addPropertiesSheet( diagram, target, element),
-
-    }
 }
 
 
@@ -114,6 +116,9 @@ const _addElement = ( diagram:FlowyDiagram, target:HTMLElement, image_url:URL, t
     
     target.addEventListener("click", () => {
 
+        // guard already selected
+        if( diagram.querySelector( ".selectedblock" ) !== null ) return 
+
         const event = new CustomEvent<HTMLElement>('blockSelected', {
             detail: target
         })
@@ -139,7 +144,7 @@ const _addElement = ( diagram:FlowyDiagram, target:HTMLElement, image_url:URL, t
     return render( content, target )
 }
 
-const  createTemplate = ( value:number, image_url:URL, title:string, description:string ) => 
+const  _createTemplate = ( value:number, image_url:URL, title:string, description:string ) => 
     html`
     <div class="blockelem create-flowy noselect">
         <input type="hidden" name="blockelemtype" class="blockelemtype" value="${value}">
@@ -162,19 +167,19 @@ const  createTemplate = ( value:number, image_url:URL, title:string, description
 const _addTemplates =  ( target:HTMLElement ) => {
 
     const templates = [
-            createTemplate( 1, eye_img, 'New visitor', 'Triggers when somebody visits a specified page'),
-            createTemplate( 2, action_img, 'Action is performed', 'Triggers when somebody performs a specified action'),
-            createTemplate( 3, time_img, 'Time has passed', 'Triggers after a specified amount of time'),
-            createTemplate( 4, error_img, 'Error prompt', 'Triggers when a specified error happens'),
+            _createTemplate( 1, eye_img, 'New visitor', 'Triggers when somebody visits a specified page'),
+            _createTemplate( 2, action_img, 'Action is performed', 'Triggers when somebody performs a specified action'),
+            _createTemplate( 3, time_img, 'Time has passed', 'Triggers after a specified amount of time'),
+            _createTemplate( 4, error_img, 'Error prompt', 'Triggers when a specified error happens'),
     
-            createTemplate(5, database_img, 'New database entry', 'Adds a new entry to a specified database'),
-            createTemplate(6, database_img, 'Update database', 'Edits and deletes database entries and properties'),
-            createTemplate(7, action_img, 'Perform an action', 'Performs or edits a specified action'),
-            createTemplate(8, twitter_img, 'Make a tweet', 'Makes a tweet with a specified query'),
+            _createTemplate(5, database_img, 'New database entry', 'Adds a new entry to a specified database'),
+            _createTemplate(6, database_img, 'Update database', 'Edits and deletes database entries and properties'),
+            _createTemplate(7, action_img, 'Perform an action', 'Performs or edits a specified action'),
+            _createTemplate(8, twitter_img, 'Make a tweet', 'Makes a tweet with a specified query'),
 
-            createTemplate(9, log_img, 'Add new log entry', 'Adds a new log entry to this project'),
-            createTemplate(10, log_img, 'Update logs', 'Edits and deletes log entries in this project'),
-            createTemplate(11, error_img, 'Prompt an error', 'Triggers a specified error'),
+            _createTemplate(9, log_img, 'Add new log entry', 'Adds a new log entry to this project'),
+            _createTemplate(10, log_img, 'Update logs', 'Edits and deletes log entries in this project'),
+            _createTemplate(11, error_img, 'Prompt an error', 'Triggers a specified error'),
     ]
 
     render(html`${templates}`, target)
