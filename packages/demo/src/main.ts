@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const properties_container = document.getElementById('propwrap')!
     
-    flowy.addEventListener( 'blockSelected', ((e:CustomEvent<HTMLElement>) => {
+    flowy.addEventListener( 'blockSelected', (e) => {
         // guard already selected
         if( flowy.querySelector( ".selectedblock" ) !== null ) return 
 
@@ -27,9 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
         properties_container.classList.add("itson");
         e.detail.classList.add("selectedblock");
 
-    }) as EventListener, false )
+    }, false )
 
-    flowy.addEventListener( 'sheetClosed', ((e:CustomEvent<HTMLElement>) => {
+    flowy.addEventListener( 'sheetClosed', (e) => {
         console.debug( `sheet closed! element: ${e.detail.id}`)
         
         properties_container.querySelector("#properties")?.classList.remove("expanded")
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         e.detail.classList.remove("selectedblock");
 
-    }) as EventListener, false )
+    }, false )
 
  
 })
