@@ -1,10 +1,10 @@
-import {LitElement, html, render} from 'lit';
-import {query} from 'lit/decorators/query.js';
-import {customElement, property} from 'lit/decorators.js';
+import {LitElement, html, render}   from 'lit';
+import {query}                      from 'lit/decorators/query.js';
+import {customElement, property}    from 'lit/decorators.js';
 
 import './flowy.css'
 
-export type SnappingHandler    = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
+export type SnappingHandler     = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
 export type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
 
 export interface Block {
@@ -35,10 +35,8 @@ type ActionType = 'drop' | 'rearrange'
 function toInt(value: number | string) {
     if (typeof (value) === 'number')
         return parseInt(`${value}`)
-    else
-        return parseInt(value)
+    return parseInt(value)
 }
-
 
 const createOrUpdateArrow = ( id:string|HTMLElement, x:number, y:number, paddingy:number = 80, start_x = 20 ): HTMLElement => {
 
@@ -74,6 +72,49 @@ function hasParentClass(element: HTMLElement, classname: string): boolean {
 }
 
 type AddBlockArgs = Omit<Block, 'height'|'width'> & Partial<Block>
+
+/**
+ *  events supported by element
+ * 
+ * @see {@link https://github.com/Microsoft/TypeScript/issues/9604#issuecomment-231659171|issue #9604} 
+ * Overriding addEventListener to augment event objects #9604
+ */
+export interface FlowyDiagram extends HTMLElement {
+    /**
+     * event raised when start dragging template over diagram 
+     * 
+     * @param type 'templateGrabbed'
+     * @param listener (ev: CustomEvent<HTMLElement>) => void
+     * @param capture 
+     */
+    addEventListener(type: 'templateGrabbed', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    /**
+     * event raised when start dragging template over diagram 
+     * 
+     * @param type 'templateReleased'
+     * @param listener (ev: CustomEvent<HTMLElement>) => void
+     * @param capture 
+     */
+    addEventListener(type: 'templateReleased', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    /**
+     * event raised when a diagram's block is selected 
+     * 
+     * @param type 'blockSelected'
+     * @param listener (ev: CustomEvent<HTMLElement>) => void
+     * @param capture 
+     */
+    addEventListener(type: 'blockSelected', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    /**
+     * event raised when a block's sheet is closeds 
+     * 
+     * @param type 'sheetClosed'
+     * @param listener (ev: CustomEvent<HTMLElement>) => void
+     * @param capture 
+     */
+    addEventListener(type: 'sheetClosed', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    
+    addEventListener(type: string, listener: EventListener | EventListenerObject, useCapture?: boolean): void
+}
 
 @customElement('flowy-diagram')
 export class FlowyDiagram extends LitElement {
@@ -129,7 +170,7 @@ export class FlowyDiagram extends LitElement {
     #arrowByValue(value: number | string) {
         return document.getElementById( `arrow${value}`) as HTMLElement
     }
-
+  
     /**
      * disable shadow root
      * 
@@ -809,6 +850,7 @@ export class FlowyDiagram extends LitElement {
             }
 
             const rearrangeMe = () => {
+
                 let result = blocks.map(a => a.parent);
                 for (let z = 0; z < result.length; z++) {
                     if (result[z] == -1) {
@@ -816,7 +858,6 @@ export class FlowyDiagram extends LitElement {
                     }
                     let totalwidth = 0;
                     let totalremove = 0;
-                    let maxheight = 0;
                     for (let w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
                         let children = blocks.filter(id => id.parent == result[z])[w];
                         if (blocks.filter(id => id.parent == children.id).length == 0) {
@@ -877,14 +918,14 @@ export class FlowyDiagram extends LitElement {
         }
 
         const blockGrabbed = (block: HTMLElement) => {
-            const event = new CustomEvent<HTMLElement>('blockGrabbed', {
+            const event = new CustomEvent<HTMLElement>('templateGrabbed', {
                 detail: block
             })
             this.dispatchEvent(event)
         }
 
         const blockReleased = ( block: HTMLElement ) => {
-            const event = new CustomEvent<HTMLElement>('blockReleased', {
+            const event = new CustomEvent<HTMLElement>('templateReleased', {
                 detail: block
             })
             this.dispatchEvent(event)

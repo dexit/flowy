@@ -19,5 +19,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "typedoc": "^0.24.1"
+  }
 }

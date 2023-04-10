@@ -1,0 +1,338 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>flowy-engine</title><meta name="description" content="Documentation for flowy-engine"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">flowy-engine</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<h2>flowy-engine</h2></div>
+<div class="tsd-panel tsd-typography"><a id="$flowy" class="tsd-anchor"></a><h1><a href="#$flowy" style="color:inherit;text-decoration:none">Flowy</a></h1><p><img src="https://media.giphy.com/media/dv1C56OywrP7Cn20nr/giphy.gif" alt="Demo">
+<br>A javascript library to create pretty flowcharts with ease ✨</p>
+<p><a href="https://dribbble.com/shots/8576286-Flowy-Flowchart-Engine">Dribbble</a> | <a href="https://twitter.com/alyssaxuu/status/1199724989353730048">Twitter</a> | <a href="https://alyssax.com/x/flowy">Live demo</a></p>
+<p>Flowy makes creating WebApps with flowchart functionality an incredibly simple task. Build automation software, mind mapping tools, or simple programming platforms in minutes by implementing the library into your project. </p>
+<blockquote>
+<p>You can support this project (and many others) through <a href="https://github.com/sponsors/alyssaxuu">GitHub Sponsors</a>! ❤️</p>
+</blockquote>
+<p>Made by <a href="https://alyssax.com">Alyssa X</a></p>
+<a id="$table-of-contents" class="tsd-anchor"></a><h2><a href="#$table-of-contents" style="color:inherit;text-decoration:none">Table of contents</a></h2><ul>
+<li><a href="#features">Features</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#running-flowy">Running Flowy</a><ul>
+<li><a href="#initialization">Initialization</a></li>
+<li><a href="#example">Example</a></li>
+</ul>
+</li>
+<li><a href="#callbacks">Callbacks</a><ul>
+<li><a href="#on-grab">On grab</a></li>
+<li><a href="#on-release">On release</a></li>
+<li><a href="#on-snap">On snap</a></li>
+<li><a href="#on-rearrange">On rearrange</a></li>
+</ul>
+</li>
+<li><a href="#methods">Methods</a><ul>
+<li><a href="#get-the-flowchart-data">Get the flowchart data</a></li>
+<li><a href="#import-the-flowchart-data">Import the flowchart data</a></li>
+<li><a href="#delete-all-blocks">Delete all blocks</a></li>
+</ul>
+</li>
+</ul>
+<a id="$features" class="tsd-anchor"></a><h2><a href="#$features" style="color:inherit;text-decoration:none">Features</a></h2><p>Currently, Flowy supports the following:</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Responsive drag and drop</li>
+<li><input checked="" disabled="" type="checkbox"> Automatic snapping</li>
+<li><input checked="" disabled="" type="checkbox"> Automatic scrolling</li>
+<li><input checked="" disabled="" type="checkbox"> Block rearrangement</li>
+<li><input checked="" disabled="" type="checkbox"> Delete blocks</li>
+<li><input checked="" disabled="" type="checkbox"> Automatic block centering</li>
+<li><input checked="" disabled="" type="checkbox"> Conditional snapping</li>
+<li><input checked="" disabled="" type="checkbox"> Conditional block removal</li>
+<li><input checked="" disabled="" type="checkbox"> Import saved files</li>
+<li><input checked="" disabled="" type="checkbox"> Mobile support</li>
+<li><input checked="" disabled="" type="checkbox"> Vanilla javascript (no dependencies)</li>
+<li><input disabled="" type="checkbox"> <a href="https://github.com/alyssaxuu/flowy/issues/10">npm install</a></li>
+</ul>
+<p>You can suggest new features <a href="https://github.com/alyssaxuu/flowy/issues">here</a></p>
+<a id="$installation" class="tsd-anchor"></a><h2><a href="#$installation" style="color:inherit;text-decoration:none">Installation</a></h2><p>Adding Flowy to your WebApp is incredibly simple:</p>
+<ol>
+<li>Link  <code>flowy.min.js</code>  and  <code>flowy.min.css</code>  to your project. Through jsDelivr:</li>
+</ol>
+<pre><code class="language-html"><span class="hl-0">&lt;</span><span class="hl-1">link</span><span class="hl-2"> </span><span class="hl-3">rel</span><span class="hl-2">=</span><span class="hl-4">&quot;stylesheet&quot;</span><span class="hl-2"> </span><span class="hl-3">href</span><span class="hl-2">=</span><span class="hl-4">&quot;https://cdn.jsdelivr.net/gh/alyssaxuu/flowy/flowy.min.css&quot;</span><span class="hl-0">&gt;</span><span class="hl-2"> </span><br/><span class="hl-0">&lt;</span><span class="hl-1">script</span><span class="hl-5"> </span><span class="hl-3">src</span><span class="hl-5">=</span><span class="hl-4">&quot;https://cdn.jsdelivr.net/gh/alyssaxuu/flowy/flowy.min.js&quot;</span><span class="hl-0">&gt;&lt;/</span><span class="hl-1">script</span><span class="hl-0">&gt;</span>
+</code></pre>
+<ol start="2">
+<li>Create a canvas element that will contain the flowchart (for example,  <code>&lt;div id=&quot;canvas&quot;&gt;&lt;/div&gt;</code>)</li>
+<li>Create the draggable blocks with the  <code>.create-flowy</code>  class (for example,  <code>&lt;div class=&quot;create-flowy&quot;&gt;Grab me&lt;/div&gt;</code>)</li>
+</ol>
+<a id="$running-flowy" class="tsd-anchor"></a><h2><a href="#$running-flowy" style="color:inherit;text-decoration:none">Running Flowy</a></h2><a id="$initialization" class="tsd-anchor"></a><h3><a href="#$initialization" style="color:inherit;text-decoration:none">Initialization</a></h3><pre><code class="language-javascript"><span class="hl-6">flowy</span><span class="hl-2">(</span><span class="hl-7">canvas</span><span class="hl-2">, </span><span class="hl-7">ongrab</span><span class="hl-2">, </span><span class="hl-7">onrelease</span><span class="hl-2">, </span><span class="hl-7">onsnap</span><span class="hl-2">, </span><span class="hl-7">onrearrange</span><span class="hl-2">, </span><span class="hl-7">spacing_x</span><span class="hl-2">, </span><span class="hl-7">spacing_y</span><span class="hl-2">);</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>canvas</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The element that will contain the blocks</td>
+</tr>
+<tr>
+<td><code>ongrab</code></td>
+<td><em>function</em> (optional)</td>
+<td>Function that gets triggered when a block is dragged</td>
+</tr>
+<tr>
+<td><code>onrelease</code></td>
+<td><em>function</em> (optional)</td>
+<td>Function that gets triggered when a block is released</td>
+</tr>
+<tr>
+<td><code>onsnap</code></td>
+<td><em>function</em> (optional)</td>
+<td>Function that gets triggered when a block snaps with another one</td>
+</tr>
+<tr>
+<td><code>onrearrange</code></td>
+<td><em>function</em> (optional)</td>
+<td>Function that gets triggered when blocks are rearranged</td>
+</tr>
+<tr>
+<td><code>spacing_x</code></td>
+<td><em>integer</em> (optional)</td>
+<td>Horizontal spacing between blocks (default 20px)</td>
+</tr>
+<tr>
+<td><code>spacing_y</code></td>
+<td><em>integer</em> (optional)</td>
+<td>Vertical spacing between blocks (default 80px)</td>
+</tr>
+</tbody></table>
+<p>To define the blocks that can be dragged, you need to add the class <code>.create-flowy</code></p>
+<a id="$example" class="tsd-anchor"></a><h3><a href="#$example" style="color:inherit;text-decoration:none">Example</a></h3><p><strong>HTML</strong></p>
+<pre><code class="language-html"><span class="hl-0">&lt;</span><span class="hl-1">div</span><span class="hl-2"> </span><span class="hl-3">class</span><span class="hl-2">=</span><span class="hl-4">&quot;create-flowy&quot;</span><span class="hl-0">&gt;</span><span class="hl-2">The block to be dragged</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">&lt;</span><span class="hl-1">div</span><span class="hl-2"> </span><span class="hl-3">id</span><span class="hl-2">=</span><span class="hl-4">&quot;canvas&quot;</span><span class="hl-0">&gt;&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span>
+</code></pre>
+<p><strong>Javascript</strong></p>
+<pre><code class="language-javascript"><span class="hl-8">var</span><span class="hl-2"> </span><span class="hl-7">spacing_x</span><span class="hl-2"> = </span><span class="hl-9">40</span><span class="hl-2">;</span><br/><span class="hl-8">var</span><span class="hl-2"> </span><span class="hl-7">spacing_y</span><span class="hl-2"> = </span><span class="hl-9">100</span><span class="hl-2">;</span><br/><span class="hl-10">// Initialize Flowy</span><br/><span class="hl-6">flowy</span><span class="hl-2">(</span><span class="hl-7">document</span><span class="hl-2">.</span><span class="hl-6">getElementById</span><span class="hl-2">(</span><span class="hl-11">&quot;canvas&quot;</span><span class="hl-2">), </span><span class="hl-7">onGrab</span><span class="hl-2">, </span><span class="hl-7">onRelease</span><span class="hl-2">, </span><span class="hl-7">onSnap</span><span class="hl-2">, </span><span class="hl-7">onRearrange</span><span class="hl-2">, </span><span class="hl-7">spacing_x</span><span class="hl-2">, </span><span class="hl-7">spacing_y</span><span class="hl-2">);</span><br/><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onGrab</span><span class="hl-2">(</span><span class="hl-7">block</span><span class="hl-2">){</span><br/><span class="hl-2">    </span><span class="hl-10">// When the user grabs a block</span><br/><span class="hl-2">}</span><br/><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onRelease</span><span class="hl-2">(){</span><br/><span class="hl-2">    </span><span class="hl-10">// When the user releases a block</span><br/><span class="hl-2">}</span><br/><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onSnap</span><span class="hl-2">(</span><span class="hl-7">block</span><span class="hl-2">, </span><span class="hl-7">first</span><span class="hl-2">, </span><span class="hl-7">parent</span><span class="hl-2">){</span><br/><span class="hl-2">    </span><span class="hl-10">// When a block snaps with another one</span><br/><span class="hl-2">}</span><br/><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onRearrange</span><span class="hl-2">(</span><span class="hl-7">block</span><span class="hl-2">, </span><span class="hl-7">parent</span><span class="hl-2">){</span><br/><span class="hl-2">    </span><span class="hl-10">// When a block is rearranged</span><br/><span class="hl-2">}</span>
+</code></pre>
+<a id="$callbacks" class="tsd-anchor"></a><h2><a href="#$callbacks" style="color:inherit;text-decoration:none">Callbacks</a></h2><p>In order to use callbacks, you need to add the functions when initializing Flowy, as explained before.</p>
+<a id="$on-grab" class="tsd-anchor"></a><h3><a href="#$on-grab" style="color:inherit;text-decoration:none">On grab</a></h3><pre><code class="language-javascript"><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onGrab</span><span class="hl-2">(</span><span class="hl-7">block</span><span class="hl-2">){</span><br/><span class="hl-2">    </span><span class="hl-10">// When the user grabs a block</span><br/><span class="hl-2">}</span>
+</code></pre>
+<p>Gets triggered when a user grabs a block with the class <code>create-flowy</code></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>block</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The block that has been grabbed</td>
+</tr>
+</tbody></table>
+<a id="$on-release" class="tsd-anchor"></a><h3><a href="#$on-release" style="color:inherit;text-decoration:none">On release</a></h3><pre><code class="language-javascript"><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onRelease</span><span class="hl-2">(){</span><br/><span class="hl-2">    </span><span class="hl-10">// When the user lets go of a block</span><br/><span class="hl-2">}</span>
+</code></pre>
+<p>Gets triggered when a user lets go of a block, regardless of whether it attaches or even gets released in the canvas.</p>
+<a id="$on-snap" class="tsd-anchor"></a><h3><a href="#$on-snap" style="color:inherit;text-decoration:none">On snap</a></h3><pre><code class="language-javascript"><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onSnap</span><span class="hl-2">(</span><span class="hl-7">block</span><span class="hl-2">, </span><span class="hl-7">first</span><span class="hl-2">, </span><span class="hl-7">parent</span><span class="hl-2">){</span><br/><span class="hl-2">    </span><span class="hl-10">// When a block can attach to a parent</span><br/><span class="hl-2">    </span><span class="hl-12">return</span><span class="hl-2"> </span><span class="hl-8">true</span><span class="hl-2">;</span><br/><span class="hl-2">}</span>
+</code></pre>
+<p>Gets triggered when a block can attach to another parent block. You can either prevent the attachment, or allow it by using <code>return true;</code></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>block</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The block that has been grabbed</td>
+</tr>
+<tr>
+<td><code>first</code></td>
+<td><em>boolean</em></td>
+<td>If true, the block that has been dragged is the first one in the canvas</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The parent the block can attach to</td>
+</tr>
+</tbody></table>
+<a id="$on-rearrange" class="tsd-anchor"></a><h3><a href="#$on-rearrange" style="color:inherit;text-decoration:none">On rearrange</a></h3><pre><code class="language-javascript"><span class="hl-8">function</span><span class="hl-2"> </span><span class="hl-6">onRearrange</span><span class="hl-2">(</span><span class="hl-7">block</span><span class="hl-2">, </span><span class="hl-7">parent</span><span class="hl-2">){</span><br/><span class="hl-2">    </span><span class="hl-10">// When a block is rearranged</span><br/><span class="hl-2">    </span><span class="hl-12">return</span><span class="hl-2"> </span><span class="hl-8">true</span><span class="hl-2">;</span><br/><span class="hl-2">}</span>
+</code></pre>
+<p>Gets triggered when blocks are rearranged and are dropped anywhere in the canvas, without a parent to attach to. You can either allow the blocks to be deleted, or prevent it and thus have them re-attach to their previous parent using <code>return true;</code></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>block</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The block that has been grabbed</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The parent the block can attach to</td>
+</tr>
+</tbody></table>
+<a id="$methods" class="tsd-anchor"></a><h2><a href="#$methods" style="color:inherit;text-decoration:none">Methods</a></h2><a id="$get-the-flowchart-data" class="tsd-anchor"></a><h3><a href="#$get-the-flowchart-data" style="color:inherit;text-decoration:none">Get the flowchart data</a></h3><pre><code class="language-javascript"><span class="hl-10">// As an object</span><br/><span class="hl-7">flowy</span><span class="hl-2">.</span><span class="hl-6">output</span><span class="hl-2">();</span><br/><span class="hl-10">// As a JSON string</span><br/><span class="hl-13">JSON</span><span class="hl-2">.</span><span class="hl-6">stringify</span><span class="hl-2">(</span><span class="hl-7">flowy</span><span class="hl-2">.</span><span class="hl-6">output</span><span class="hl-2">());</span>
+</code></pre>
+<p>The JSON object that gets outputted looks like this:</p>
+<pre><code class="language-json"><span class="hl-2">{</span><br/><span class="hl-2">    </span><span class="hl-14">&quot;html&quot;</span><span class="hl-2">: </span><span class="hl-11">&quot;&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-14">&quot;blockarr&quot;</span><span class="hl-2">: [],</span><br/><span class="hl-2">    </span><span class="hl-14">&quot;blocks&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">        {</span><br/><span class="hl-2">            </span><span class="hl-14">&quot;id&quot;</span><span class="hl-2">: </span><span class="hl-9">1</span><span class="hl-2">,</span><br/><span class="hl-2">            </span><span class="hl-14">&quot;parent&quot;</span><span class="hl-2">: </span><span class="hl-9">0</span><span class="hl-2">,</span><br/><span class="hl-2">            </span><span class="hl-14">&quot;data&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">                {</span><br/><span class="hl-2">                </span><span class="hl-14">&quot;name&quot;</span><span class="hl-2">: </span><span class="hl-11">&quot;blockid&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">                </span><span class="hl-14">&quot;value&quot;</span><span class="hl-2">: </span><span class="hl-11">&quot;1&quot;</span><br/><span class="hl-2">                }</span><br/><span class="hl-2">            ],</span><br/><span class="hl-2">            </span><span class="hl-14">&quot;attr&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">                {</span><br/><span class="hl-2">                </span><span class="hl-14">&quot;id&quot;</span><span class="hl-2">: </span><span class="hl-11">&quot;block-id&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">                </span><span class="hl-14">&quot;class&quot;</span><span class="hl-2">: </span><span class="hl-11">&quot;block-class&quot;</span><br/><span class="hl-2">                }</span><br/><span class="hl-2">            ]</span><br/><span class="hl-2">        }</span><br/><span class="hl-2">    ]</span><br/><span class="hl-2">}</span>
+</code></pre>
+<p>Here&#39;s what each property means:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>html</code></td>
+<td><em>string</em></td>
+<td>Contains the canvas data</td>
+</tr>
+<tr>
+<td><code>blockarr</code></td>
+<td><em>array</em></td>
+<td>Contains the block array generated by the library (for import purposes)</td>
+</tr>
+<tr>
+<td><code>blocks</code></td>
+<td><em>array</em></td>
+<td>Contains the readable block array</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><em>integer</em></td>
+<td>Unique value that identifies a block</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td><em>integer</em></td>
+<td>The <code>id</code> of the parent a block is attached to (-1 means the block has no parent)</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><em>array of objects</em></td>
+<td>An array of all the inputs within a certain block</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><em>string</em></td>
+<td>The name attribute of the input</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><em>string</em></td>
+<td>The value attribute of the input</td>
+</tr>
+<tr>
+<td><code>attr</code></td>
+<td><em>array of objects</em></td>
+<td>Contains all the data attributes of a certain block</td>
+</tr>
+</tbody></table>
+<a id="$import-the-flowchart-data" class="tsd-anchor"></a><h3><a href="#$import-the-flowchart-data" style="color:inherit;text-decoration:none">Import the flowchart data</a></h3><pre><code class="language-javascript"><span class="hl-7">flowy</span><span class="hl-2">.</span><span class="hl-6">import</span><span class="hl-2">(</span><span class="hl-7">output</span><span class="hl-2">)</span>
+</code></pre>
+<p>Allows you to import entire flowcharts initially exported using the previous method, <code>flowy.output()</code></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>output</code></td>
+<td><em>javascript DOM element</em></td>
+<td>The data from <code>flowy.output()</code></td>
+</tr>
+</tbody></table>
+<a id="$warning" class="tsd-anchor"></a><h4><a href="#$warning" style="color:inherit;text-decoration:none">Warning</a></h4><p>This method accepts raw HTML and does <strong>not</strong> sanitize it, therefore this method is vulnerable to <a href="https://owasp.org/www-community/attacks/DOM_Based_XSS">XSS</a>. The <em>only</em> safe use for this method is when the input is <strong>absolutely</strong> trusted, if the input is <em>not</em> to be trusted the use this method can introduce a vulnerability in your system.</p>
+<a id="$delete-all-blocks" class="tsd-anchor"></a><h3><a href="#$delete-all-blocks" style="color:inherit;text-decoration:none">Delete all blocks</a></h3><p>To remove all blocks at once use:</p>
+<pre><code class="language-javascript"><span class="hl-7">flowy</span><span class="hl-2">.</span><span class="hl-6">deleteBlocks</span><span class="hl-2">()</span>
+</code></pre>
+<p>Currently there is no method to individually remove blocks. The only way to go about it is by splitting branches manually.
+#
+ Feel free to reach out to me through email at <a href="mailto:hi@alyssax.com">hi@alyssax.com</a> or <a href="https://twitter.com/alyssaxuu">on Twitter</a> if you have any questions or feedback! Hope you find this useful 💜</p>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>On This Page</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li>
+<ul>
+<li><a href="#$flowy"><span>Flowy</span></a></li>
+<li>
+<ul>
+<li><a href="#$table-of-contents"><span>Table of contents</span></a></li>
+<li><a href="#$features"><span>Features</span></a></li>
+<li><a href="#$installation"><span>Installation</span></a></li>
+<li><a href="#$running-flowy"><span>Running <wbr/>Flowy</span></a></li>
+<li>
+<ul>
+<li><a href="#$initialization"><span>Initialization</span></a></li>
+<li><a href="#$example"><span>Example</span></a></li></ul></li>
+<li><a href="#$callbacks"><span>Callbacks</span></a></li>
+<li>
+<ul>
+<li><a href="#$on-grab"><span>On grab</span></a></li>
+<li><a href="#$on-release"><span>On release</span></a></li>
+<li><a href="#$on-snap"><span>On snap</span></a></li>
+<li><a href="#$on-rearrange"><span>On rearrange</span></a></li></ul></li>
+<li><a href="#$methods"><span>Methods</span></a></li>
+<li>
+<ul>
+<li><a href="#$get-the-flowchart-data"><span>Get the flowchart data</span></a></li>
+<li><a href="#$import-the-flowchart-data"><span>Import the flowchart data</span></a></li>
+<li>
+<ul>
+<li><a href="#$warning"><span>Warning</span></a></li></ul></li>
+<li><a href="#$delete-all-blocks"><span>Delete all blocks</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>flowy-<wbr/>engine</span></a>
+<ul class="tsd-small-nested-navigation">
+<li><a href="classes/FlowyDiagram.html" class="tsd-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg><span>Flowy<wbr/>Diagram</span></a></li>
+<li><a href="interfaces/Block.html" class="tsd-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Block</span></a></li>
+<li><a href="interfaces/BlockData.html" class="tsd-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Block<wbr/>Data</span></a></li>
+<li><a href="interfaces/Output.html" class="tsd-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Output</span></a></li>
+<li><a href="types/RearrangegHandler.html" class="tsd-kind-type-alias"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg><span>Rearrangeg<wbr/>Handler</span></a></li>
+<li><a href="types/SnappingHandler.html" class="tsd-kind-type-alias"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Snapping<wbr/>Handler</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div></body></html>
