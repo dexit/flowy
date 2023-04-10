@@ -27,6 +27,7 @@ const dropdown_img = new URL('../assets/dropdown.svg', import.meta.url)
 const checkon_img = new URL('../assets/checkon.svg', import.meta.url)
 const checkoff_img = new URL('../assets/checkoff.svg', import.meta.url)
 
+
 export interface ElementMetaData {
 
     addTemplates: ( target:HTMLElement ) => void
@@ -37,15 +38,15 @@ export interface ElementMetaData {
 
 export function getElementMetaData( diagram:FlowyDiagram ): ElementMetaData {
 
-    const blockGrabbed = (block: HTMLElement) =>
-        block.classList.add('blockdisabled');
+    const templateGrabbed = (block: HTMLElement) =>
+        block.classList.add('blockdisabled')
 
-    const blockReleased = (block: HTMLElement) => 
+    const templateReleased = (block: HTMLElement) => 
         block.classList.remove("blockdisabled")
 
-    diagram.addEventListener( 'blockGrabbed', ((event:CustomEvent<HTMLElement> ) => blockGrabbed(event.detail) ) as EventListener, false )
+    diagram.addEventListener( 'templateGrabbed', (e) =>  templateGrabbed(e.detail ), false )
     
-    diagram.addEventListener( 'blockReleased', ((event:CustomEvent<HTMLElement> ) => blockReleased(event.detail)) as EventListener, false)
+    diagram.addEventListener( 'templateReleased', (e) => templateReleased(e.detail) , false)
 
     diagram.registerSnapping( ( drag, _ ) => addElement( diagram, drag ) )
 
