@@ -54,7 +54,12 @@ export function initElement( diagram:FlowyDiagram, templates_container:HTMLEleme
 
     }, false )
 
-    diagram.registerSnapping( ( drag, _ ) => addElement( diagram, drag ) )
+    diagram.addEventListener( 'snapping',(e) => {
+
+        if( !addElement( diagram, e.detail ) ) {
+            e.preventDefault()
+        }
+    }, false )
 
     _addTemplates( templates_container )
 

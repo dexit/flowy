@@ -100,10 +100,16 @@ document.addEventListener("DOMContentLoaded", function () {
     flowy.addEventListener( 'blockGrabbed', (event:any) => drag(event.detail), false)
     flowy.addEventListener( 'blockReleased', () => release(), false)
 
-    flowy.registerSnapping( snapping )
+    // flowy.registerSnapping( snapping )
+    flowy.addEventListener( 'snapping',(e) => {
+
+        if( !snapping( e.detail ) ) {
+            e.preventDefault()
+        }
+    }, false )
 
 
-    function snapping(drag:HTMLElement, first:boolean) {
+    function snapping(drag:HTMLElement) {
         const grab = drag.querySelector(".grabme") 
         grab?.parentElement?.removeChild(grab);
         const blockin = drag.querySelector(".blockin");

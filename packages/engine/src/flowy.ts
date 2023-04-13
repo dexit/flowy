@@ -112,6 +112,25 @@ export interface FlowyDiagram extends HTMLElement {
      * @param capture 
      */
     addEventListener(type: 'sheetClosed', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    /**
+     * event raised when a block's is dropped.
+     *  
+     * it is a cancellable event, if call preventDefault() drag is cancelled  
+     * 
+     * @param type 'snapping'
+     * @param listener (ev: CustomEvent<HTMLElement>) => void
+     * @param capture 
+     */
+    addEventListener(type: 'snapping', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    /**
+     * 
+     * it is a cancellable event, if call preventDefault() arranged is cancelled  
+     * 
+     * @param type 'rearranged'
+     * @param listener (ev: CustomEvent<HTMLElement>) => void
+     * @param capture 
+     */
+    addEventListener(type: 'rearranged', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
     
     addEventListener(type: string, listener: EventListener | EventListenerObject, useCapture?: boolean): void
 }
@@ -137,16 +156,6 @@ export class FlowyDiagram extends LitElement {
 
     @property( { type: 'number'} )
     spacing_y = 80
-
-    #snapping: SnappingHandler = () => true
-    registerSnapping( handler: SnappingHandler ) {
-        this.#snapping = handler
-    }
-
-    #rearrange: RearrangegHandler = () => false
-    registerRearrange( handler: RearrangegHandler ) {
-        this.#rearrange = handler
-    }
 
     render() {
         return html`<div id="canvas">`
@@ -931,26 +940,21 @@ export class FlowyDiagram extends LitElement {
             this.dispatchEvent(event)
         }
 
-        const blockSnap = (drag: HTMLElement, first: boolean, parent?: HTMLElement) => 
-            this.#snapping(drag, first, parent)
+        const blockSnap = (drag: HTMLElement, first: boolean, parent?: HTMLElement) => {
+            const event = new CustomEvent<HTMLElement>('snapping', {
+                detail: drag,
+                cancelable: true
+            })
+            return this.dispatchEvent(event)
+        }
         
-
-        const beforeDelete = (drag: HTMLElement, parent: Block) => 
-            this.#rearrange(drag, parent)
-
-        // function addEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
-        //     let nodes = document.querySelectorAll(selector);
-        //     for (let i = 0; i < nodes.length; i++) {
-        //         nodes[i].addEventListener(type, listener, capture);
-        //     }
-        // }
-
-        // function removeEventListenerMulti(type: string, listener: any, capture: boolean, selector: string) {
-        //     let nodes = document.querySelectorAll(selector);
-        //     for (let i = 0; i < nodes.length; i++) {
-        //         nodes[i].removeEventListener(type, listener, capture);
-        //     }
-        // }
+        const beforeDelete = (drag: HTMLElement, parent: Block) => {
+            const event = new CustomEvent<HTMLElement>('rearranged', {
+                detail: drag,
+                cancelable: true
+            })
+            return !this.dispatchEvent(event)
+        }
 
         this.load();
     }
