@@ -4,9 +4,6 @@ import {customElement, property}    from 'lit/decorators.js';
 
 import './flowy.css'
 
-export type SnappingHandler     = (drag:HTMLElement, first:boolean, parent?:HTMLElement ) => boolean
-export type RearrangegHandler   = (drag:HTMLElement, parent:Block) => boolean
-
 export interface Block {
     childwidth: number
     parent: number
@@ -121,7 +118,7 @@ export interface FlowyDiagram extends HTMLElement {
      * @param listener (ev: CustomEvent<HTMLElement>) => void
      * @param capture 
      */
-    addEventListener(type: 'snapping', listener: (ev: CustomEvent<HTMLElement>) => void, capture?: boolean): void
+    addEventListener(type: 'snapping', listener: (ev: CustomEvent<{ target:HTMLElement, parent?: HTMLElement }>) => void, capture?: boolean): void
     /**
      * 
      * it is a cancellable event, if call preventDefault() arranged is cancelled  
@@ -398,7 +395,6 @@ export class FlowyDiagram extends LitElement {
             }
 
             this.endDrag = (event:UIEvent) => {
-
                 const is_right_click = ( event instanceof MouseEvent && event.button == 2 /* right click */)
 
                 if (!is_right_click && (active || rearrange)) {
@@ -521,8 +517,8 @@ export class FlowyDiagram extends LitElement {
 
             const drawArrow = (arrow: Block, x: number, y: number, id: number) => {
 
-                const _blk = blocks.find(a => a.id == id)!
-                const _bid_val = this.#dragBlockValue().value
+                const _source_block = blocks.find(a => a.id == id)!
+                const _target_block_id = this.#dragBlockValue().value
 
                 const adjustment = (absx + window.scrollX) - canvas_div.scrollLeft - canvas_div.getBoundingClientRect().left
                
@@ -530,37 +526,41 @@ export class FlowyDiagram extends LitElement {
                 
                 if (x < 0) {
 
-                    el = createOrUpdateArrow(_bid_val, 5, y, paddingy, _blk.x - arrow.x + 5 ) 
+                    el = createOrUpdateArrow(_target_block_id, 5, y, paddingy, _source_block.x - arrow.x + 5 ) 
+                    el.setAttribute( "source", `block${_source_block.id}`)
+                    el.setAttribute( "target", `block${_target_block_id}`)
                     canvas_div.appendChild(el)
                     el.style.left = `${arrow.x - 5 - adjustment}px`
 
                 } else {
 
-                    el = createOrUpdateArrow(_bid_val, x, y, paddingy)
+                    el = createOrUpdateArrow(_target_block_id, x, y, paddingy)
+                    el.setAttribute( "source", `block${_source_block.id}`)
+                    el.setAttribute( "target", `block${_target_block_id}`)
                     canvas_div.appendChild(el)
-                    el.style.left = `${_blk.x - 20 - adjustment}px`
+                    el.style.left = `${_source_block.x - 20 - adjustment}px`
 
                 }
 
-                el.style.top = `${_blk.y + (_blk.height / 2) + canvas_div.getBoundingClientRect().top - absy}px`
+                el.style.top = `${_source_block.y + (_source_block.height / 2) + canvas_div.getBoundingClientRect().top - absy}px`
             }
 
             const updateArrow = (arrow: Block, x: number, y: number, children: Block) => {
 
-                const _blk = blocks.find(a => a.id == children.parent)!
+                const _source_block = blocks.find(a => a.id == children.parent)!
                 const el = this.#arrowByValue(children.id)
 
                 const adjustment = (absx + window.scrollX) - canvas_div.getBoundingClientRect().left
 
                 if (x < 0) {
 
-                    createOrUpdateArrow( el, 5, y, paddingy, _blk.x - arrow.x + 5 )
+                    createOrUpdateArrow( el, 5, y, paddingy, _source_block.x - arrow.x + 5 )
                     el.style.left = `${arrow.x - 5 - adjustment}px`
 
                 } else {
 
                     createOrUpdateArrow( el, x, y, paddingy )
-                    el.style.left = `${_blk.x - 20 - adjustment}px` 
+                    el.style.left = `${_source_block.x - 20 - adjustment}px` 
 
                 }
             }
@@ -571,7 +571,7 @@ export class FlowyDiagram extends LitElement {
                 }
                 let totalwidth = 0;
                 let totalremove = 0;
-                let maxheight = 0;
+
                 for (let w = 0; w < blocks.filter(id => id.parent == blocko[i]).length; w++) {
                     let children = blocks.filter(id => id.parent == blocko[i])[w];
                     if (children.childwidth > children.width) {
@@ -580,7 +580,9 @@ export class FlowyDiagram extends LitElement {
                         totalwidth += children.width + paddingx;
                     }
                 }
+
                 totalwidth += parseInt(window.getComputedStyle(drag).width);
+
                 for (let w = 0; w < blocks.filter(id => id.parent == blocko[i]).length; w++) {
                     let children = blocks.filter(id => id.parent == blocko[i])[w];
                     if (children.childwidth > children.width) {
@@ -631,6 +633,7 @@ export class FlowyDiagram extends LitElement {
                 let arrowblock = blocks.filter(a => a.id == this.#dragBlockValue().toInt())[0];
                 let arrowx = arrowblock.x - blocks.filter(a => a.id == blocko[i])[0].x + 20;
                 let arrowy = paddingy;
+                
                 drawArrow(arrowblock, arrowx, arrowy, blocko[i]);
 
                 if (blocks.filter(a => a.id == blocko[i])[0].parent != -1) {
@@ -941,8 +944,8 @@ export class FlowyDiagram extends LitElement {
         }
 
         const blockSnap = (drag: HTMLElement, first: boolean, parent?: HTMLElement) => {
-            const event = new CustomEvent<HTMLElement>('snapping', {
-                detail: drag,
+            const event = new CustomEvent<{target: HTMLElement, parent?: HTMLElement}>('snapping', {
+                detail: { target:drag, parent: parent },
                 cancelable: true
             })
             return this.dispatchEvent(event)

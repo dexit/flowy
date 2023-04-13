@@ -56,7 +56,8 @@ export function initElement( diagram:FlowyDiagram, templates_container:HTMLEleme
 
     diagram.addEventListener( 'snapping',(e) => {
 
-        if( !addElement( diagram, e.detail ) ) {
+        const { target, parent } = e.detail
+        if( !addElement( diagram, target, parent  ) ) {
             e.preventDefault()
         }
     }, false )
@@ -67,7 +68,18 @@ export function initElement( diagram:FlowyDiagram, templates_container:HTMLEleme
 }
 
 
-const addElement = ( diagram:FlowyDiagram, target:HTMLElement ) => {
+const addElement = ( diagram:FlowyDiagram, target:HTMLElement, parent?:HTMLElement ) => {
+
+    if( parent ) {
+        const selector = `.arrowblock[source='${parent.id}']`
+        const arrow = diagram.querySelector( selector )
+
+        if( arrow ) {
+            console.debug( `reject link to element (${parent.id})` )
+            return false
+        }
+    
+    }
 
     const grab = target.querySelector(".grabme") 
     grab?.parentElement?.removeChild(grab);
@@ -119,8 +131,9 @@ const addElement = ( diagram:FlowyDiagram, target:HTMLElement ) => {
 
 const _addElement = ( diagram:FlowyDiagram, target:HTMLElement, image_url:URL, title:string, description:string ) =>  {
     
-    target.addEventListener("click", () => {
+    target.addEventListener("click", (e) => {
 
+        console.debug( `element ${target.id} click`, target.classList )
         // guard already selected
         if( diagram.querySelector( ".selectedblock" ) !== null ) return 
 
