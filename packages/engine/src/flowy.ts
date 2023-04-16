@@ -395,6 +395,7 @@ export class FlowyDiagram extends LitElement {
             }
 
             this.endDrag = (event:UIEvent) => {
+
                 const is_right_click = ( event instanceof MouseEvent && event.button == 2 /* right click */)
 
                 if (!is_right_click && (active || rearrange)) {
@@ -413,7 +414,7 @@ export class FlowyDiagram extends LitElement {
                     }
                     
                     if (this.#dragBlockValue().toInt() === 0 && rearrange) {
-                        firstBlock("rearrange")
+                        firstBlock('rearrange')
                     } else if (active && blocks.length == 0 && (drag.getBoundingClientRect().top + window.scrollY) > (canvas_div.getBoundingClientRect().top + window.scrollY) && (drag.getBoundingClientRect().left + window.scrollX) > (canvas_div.getBoundingClientRect().left + window.scrollX)) {
                         firstBlock("drop");
                     } else if (active && blocks.length == 0) {
@@ -440,13 +441,13 @@ export class FlowyDiagram extends LitElement {
                         for (let i = 0; i < blocks.length; i++) {
                             if (checkAttach(blocko[i])) {
                                 active = false;
-                                drag.classList.remove("dragging");
+                                // drag.classList.remove("dragging");
                                 snap(drag, i, blocko);
                                 break;
                             } else if (i == blocks.length - 1) {
                                 if (beforeDelete(drag, blocks.filter(id => id.id == blocko[i])[0])) {
                                     active = false;
-                                    drag.classList.remove("dragging");
+                                    // drag.classList.remove("dragging");
                                     snap(drag, blocko.indexOf(prevblock), blocko);
                                     break;
                                 } else {
@@ -478,6 +479,29 @@ export class FlowyDiagram extends LitElement {
                 
             }
 
+            const addDragToCanvas = () => {
+
+                canvas_div.appendChild(drag)
+
+                drag.addEventListener("click", (e) => {
+
+                    // guard 
+                    const skip = ( rearrange /* && drag.classList.contains('dragging')*/ )
+
+                    drag.classList.remove('dragging')
+                    rearrange = false
+
+                    if( skip ) return
+
+                    const event = new CustomEvent<HTMLElement>('blockSelected', {
+                        detail: drag
+                    })
+                    this.dispatchEvent(event)
+            
+                })
+
+            }
+
             const removeSelection = () => {
                 canvas_div.appendChild(this._indicator);
                 drag.parentNode?.removeChild(drag);
@@ -485,15 +509,21 @@ export class FlowyDiagram extends LitElement {
 
             const firstBlock = (type: ActionType) => {
                 if (type == "drop") {
+
                     blockSnap(drag, true, undefined);
                     active = false;
                     drag.style.top = (drag.getBoundingClientRect().top + window.scrollY) - (absy + window.scrollY) + canvas_div.scrollTop + "px";
                     drag.style.left = (drag.getBoundingClientRect().left + window.scrollX) - (absx + window.scrollX) + canvas_div.scrollLeft + "px";
-                    canvas_div.appendChild(drag);
+                    
+                    addDragToCanvas()
+
                     this.addBlock()
+
                 } else if (type == "rearrange") {
-                    drag.classList.remove("dragging");
-                    rearrange = false;
+
+                    // drag.classList.remove("dragging");
+                    // rearrange = false;
+
                     for (let w = 0; w < blockstemp.length; w++) {
                         if (blockstemp[w].id != this.#dragBlockValue().toInt()) {
                             const blockParent = this.#blockByValue(blockstemp[w].id)
@@ -567,7 +597,7 @@ export class FlowyDiagram extends LitElement {
 
             const snap = (drag: HTMLElement, i: number, blocko: Array<number>) => {
                 if (!rearrange) {
-                    canvas_div.appendChild(drag);
+                    addDragToCanvas()
                 }
                 let totalwidth = 0;
                 let totalremove = 0;
@@ -667,8 +697,8 @@ export class FlowyDiagram extends LitElement {
                     blocks.filter(id => id.id == idval)[0].childwidth = totalwidth;
                 }
                 if (rearrange) {
-                    rearrange = false;
-                    drag.classList.remove("dragging");
+                    // rearrange = false;
+                    // drag.classList.remove("dragging");
                 }
                 rearrangeMe();
                 checkOffset();
