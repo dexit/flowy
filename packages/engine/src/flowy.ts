@@ -401,7 +401,6 @@ export class FlowyDiagram extends LitElement {
                 if( is_right_click ) return
                 if( !(active || rearrange) ) return
             
-
                 dragblock = false;
 
                 blockReleased( original );
@@ -416,28 +415,41 @@ export class FlowyDiagram extends LitElement {
                     original.classList.remove("dragnow");
                     drag.classList.remove("dragging");
 
-                    if (blocks.length == 0 && (drag.getBoundingClientRect().top + window.scrollY) > (canvas_div.getBoundingClientRect().top + window.scrollY) && (drag.getBoundingClientRect().left + window.scrollX) > (canvas_div.getBoundingClientRect().left + window.scrollX)) {
-                        firstBlock('drop');
-                    } else if (blocks.length == 0) {
-                        removeSelection();
-                    } else  {
-                        let blocko = blocks.map(a => a.id);
-                        for (let i = 0; i < blocks.length; i++) {
-                            if (checkAttach(blocko[i])) {
-                                active = false;
-                                if (blockSnap(drag, false, this.#blockByValue(blocko[i]))) {
-                                    snap(drag, i, blocko);
-                                } else {
-                                    active = false;
-                                    removeSelection();
-                                }
-                                break;
-                            } else if (i == blocks.length - 1) {
-                                active = false;
-                                removeSelection();
-                            }
+                    if(blocks.length === 0) {
+
+                        const { top:drag_top, left:drag_left } = drag.getBoundingClientRect()
+                        const { top:canvas_top, left:canvas_left } = canvas_div.getBoundingClientRect()
+
+                        if ((drag_top + window.scrollY) > (canvas_top + window.scrollY) && (drag_left + window.scrollX) > (canvas_left + window.scrollX)) {
+                            firstBlock('drop')
                         }
-                    } 
+                        else {
+                            removeSelection() 
+                        }
+                        return
+                    }
+
+                    const blocko = blocks.map(a => a.id)
+          
+                    for (let i = 0; i < blocks.length; i++) {
+
+                        const value = blocko[i]
+
+                        if (checkAttach(value)) {
+                            active = false
+
+                            if (blockSnap(drag, false, this.#blockByValue(value))) {
+                                snap(drag, i, blocko)
+                            } else {
+                                active = false
+                                removeSelection()
+                            }
+                            break;
+                        } else if (i == blocks.length - 1) {
+                            active = false
+                            removeSelection()
+                        }
+                    }
     
                 }
                 
@@ -454,7 +466,6 @@ export class FlowyDiagram extends LitElement {
                     for (let i = 0; i < blocks.length; i++) {
                         if (checkAttach(blocko[i])) {
                             active = false;
-                            // drag.classList.remove("dragging");
                             snap(drag, i, blocko);
                             break;
                         } 
@@ -462,7 +473,6 @@ export class FlowyDiagram extends LitElement {
                     
                             if (beforeDelete(drag, blocks.filter(id => id.id == blocko[i])[0])) {
                                 active = false;
-                                // drag.classList.remove("dragging");
                                 snap(drag, blocko.indexOf(prevblock), blocko);
                                 break;
                             } 
@@ -538,9 +548,6 @@ export class FlowyDiagram extends LitElement {
                     this.addBlock()
 
                 } else if (type == "rearrange") {
-
-                    // drag.classList.remove("dragging");
-                    // rearrange = false;
 
                     for (let w = 0; w < blockstemp.length; w++) {
                         if (blockstemp[w].id != this.#dragBlockValue()) {
@@ -714,10 +721,10 @@ export class FlowyDiagram extends LitElement {
                     }
                     blocks.filter(id => id.id == idval)[0].childwidth = totalwidth;
                 }
-                if (rearrange) {
-                    // rearrange = false;
-                    // drag.classList.remove("dragging");
-                }
+                // if (rearrange) {
+                //     rearrange = false;
+                //     drag.classList.remove("dragging");
+                // }
                 rearrangeMe();
                 checkOffset();
             }
