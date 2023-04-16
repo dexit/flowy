@@ -39,14 +39,16 @@ export function initElement( diagram:FlowyDiagram, templates_container:HTMLEleme
     }, false)
 
     diagram.addEventListener( 'sheetClosed', (e) =>  {
-        e.detail.classList.remove("selectedblock")
+        e.detail.classList.remove('selectedblock')
 
         properties_container.querySelector("#properties")?.classList.remove("expanded")
     }, true )
 
     diagram.addEventListener( 'blockSelected', (e) => {
+        // GUARD
+        if( diagram.querySelector( ".selectedblock" ) !== null ) return 
 
-        e.detail.classList.add("selectedblock")
+        e.detail.classList.add( 'selectedblock')
 
         _addPropertiesSheet( diagram, properties_container, e.detail  )
 
@@ -130,19 +132,6 @@ const addElement = ( diagram:FlowyDiagram, target:HTMLElement, parent?:HTMLEleme
 }
 
 const _addElement = ( diagram:FlowyDiagram, target:HTMLElement, image_url:URL, title:string, description:string ) =>  {
-    
-    target.addEventListener("click", (e) => {
-
-        console.debug( `element ${target.id} click`, target.classList )
-        // guard already selected
-        if( diagram.querySelector( ".selectedblock" ) !== null ) return 
-
-        const event = new CustomEvent<HTMLElement>('blockSelected', {
-            detail: target
-        })
-        diagram.dispatchEvent(event)
-
-    })
     
     const content = 
         html`
