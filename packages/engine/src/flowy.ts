@@ -410,49 +410,63 @@ export class FlowyDiagram extends LitElement {
                     this._indicator.classList.add("invisible");
                 }
                 
+                // ACTIVE STRATEGY
                 if (active) {
+                    
                     original.classList.remove("dragnow");
                     drag.classList.remove("dragging");
-                }
-                
-                if (this.#dragBlockValue() === 0 && rearrange) {
-                    firstBlock('rearrange')
-                } else if (active && blocks.length == 0 && (drag.getBoundingClientRect().top + window.scrollY) > (canvas_div.getBoundingClientRect().top + window.scrollY) && (drag.getBoundingClientRect().left + window.scrollX) > (canvas_div.getBoundingClientRect().left + window.scrollX)) {
-                    firstBlock("drop");
-                } else if (active && blocks.length == 0) {
-                    removeSelection();
-                } else if (active) {
-                    let blocko = blocks.map(a => a.id);
-                    for (let i = 0; i < blocks.length; i++) {
-                        if (checkAttach(blocko[i])) {
-                            active = false;
-                            if (blockSnap(drag, false, this.#blockByValue(blocko[i]))) {
-                                snap(drag, i, blocko);
-                            } else {
+
+                    if (blocks.length == 0 && (drag.getBoundingClientRect().top + window.scrollY) > (canvas_div.getBoundingClientRect().top + window.scrollY) && (drag.getBoundingClientRect().left + window.scrollX) > (canvas_div.getBoundingClientRect().left + window.scrollX)) {
+                        firstBlock('drop');
+                    } else if (blocks.length == 0) {
+                        removeSelection();
+                    } else  {
+                        let blocko = blocks.map(a => a.id);
+                        for (let i = 0; i < blocks.length; i++) {
+                            if (checkAttach(blocko[i])) {
+                                active = false;
+                                if (blockSnap(drag, false, this.#blockByValue(blocko[i]))) {
+                                    snap(drag, i, blocko);
+                                } else {
+                                    active = false;
+                                    removeSelection();
+                                }
+                                break;
+                            } else if (i == blocks.length - 1) {
                                 active = false;
                                 removeSelection();
                             }
-                            break;
-                        } else if (i == blocks.length - 1) {
-                            active = false;
-                            removeSelection();
                         }
+                    } 
+    
+                }
+                
+                // REARRANGE STRATEGY
+                if ( rearrange  ) {
+
+                    if( this.#dragBlockValue() === 0 ) {
+                        firstBlock('rearrange')
+                        return
                     }
-                } else if (rearrange) {
-                    let blocko = blocks.map(a => a.id);
+
+                    const blocko = blocks.map(a => a.id);
+
                     for (let i = 0; i < blocks.length; i++) {
                         if (checkAttach(blocko[i])) {
                             active = false;
                             // drag.classList.remove("dragging");
                             snap(drag, i, blocko);
                             break;
-                        } else if (i == blocks.length - 1) {
+                        } 
+                        else if (i == blocks.length - 1) {
+                    
                             if (beforeDelete(drag, blocks.filter(id => id.id == blocko[i])[0])) {
                                 active = false;
                                 // drag.classList.remove("dragging");
                                 snap(drag, blocko.indexOf(prevblock), blocko);
                                 break;
-                            } else {
+                            } 
+                            else {
                                 rearrange = false;
                                 blockstemp = [];
                                 active = false;
@@ -461,7 +475,9 @@ export class FlowyDiagram extends LitElement {
                             }
                         }
                     }
-                }
+                } 
+                
+
                 
             }
 
