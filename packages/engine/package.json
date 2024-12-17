@@ -1,0 +1,27 @@
+{
+  "name": "flowy-engine",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "source": "src/flowy.ts",
+  "module": "dist/flowy.js",
+  "types": "dist/flowy.d.ts",
+  "scripts": {
+    "doc": "typedoc src/flowy.ts",
+    "build": "parcel build src/flowy.ts --no-source-maps",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "browserslist": "> 1%, last 2 versions, not dead",
+  "devDependencies": {
+    "@parcel/packager-ts": "^2.8.3",
+    "@parcel/transformer-typescript-tsc": "^2.8.3",
+    "@parcel/transformer-typescript-types": "^2.8.3",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "lit": "^2.7.0"
+  }
+}

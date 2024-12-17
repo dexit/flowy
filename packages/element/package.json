@@ -1,0 +1,42 @@
+{
+  "name": "flowy-element",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "bsorrentino <bartolomeo.sorrentino@gmail.com>",
+  "homepage": "https://github.com/bsorrentino/flowy#readme",
+  "license": "MIT",
+  "source": "src/element.ts",
+  "module": "dist/element.js",
+  "types": "dist/element.d.ts",
+  "directories": {
+    "src": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsorrentino/flowy.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/element.test.js",
+    "build": "parcel build src/element.ts --no-source-maps"
+
+  },
+  "bugs": {
+    "url": "https://github.com/bsorrentino/flowy/issues"
+  },
+  "dependencies": {
+    "flowy-engine": "*",
+    "lit": "^2.7.0",
+    "lit-html": "^2.7.0"
+  },
+  "devDependencies": {
+    "@parcel/packager-ts": "^2.8.3",
+    "@parcel/transformer-typescript-tsc": "^2.8.3",
+    "@parcel/transformer-typescript-types": "^2.8.3",
+    "typescript": "^5.0.2"
+  }
+
+}

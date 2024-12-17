@@ -1,0 +1,26 @@
+{
+  "name": "flowy",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "lerna run start",
+    "build": "lerna run build",
+    "demo": "http-server packages/demo -c-1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "browserslist": "> 1%, last 2 versions, not dead",
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "lerna": "^6.6.1",
+    "parcel": "^2.8.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typedoc": "^0.24.1"
+  }
+}

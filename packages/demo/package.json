@@ -1,0 +1,27 @@
+{
+  "name": "flowy-demo",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "source": "index.html",
+  "browserslist": "> 1%, last 2 versions, not dead",
+  "scripts": {
+    "build": "parcel build src/main.ts --no-source-maps",
+    "start": "parcel",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "flowy-engine": "*",
+    "flowy-element": "*",
+    "lit": "^2.7.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@parcel/packager-ts": "^2.8.3",
+    "@parcel/transformer-typescript-tsc": "^2.8.3",
+    "@parcel/transformer-typescript-types": "^2.8.3",
+    "typescript": "^5.0.2"
+  }
+}
